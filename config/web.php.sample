@@ -1,0 +1,207 @@
+<?php
+
+$params = require __DIR__ . '/params.php';
+$db = require __DIR__ . '/db.php';
+
+$config = [
+    'id' => 'basic',
+    'basePath' => dirname(__DIR__),
+    'bootstrap' => [
+        'log',
+        'app\components\BootstrapComponent'
+    ],
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm' => '@vendor/npm-asset',
+    ],
+    # Мова яка використовується в вигляді ключів переводів
+    //'sourceLanguage' => 'en-GB',
+    # Мова по замовчуванню
+    'language' => 'uk-UA',
+    'defaultRoute' => 'doctor/index',
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\Module',
+            'layout' => 'admin_layout',
+        ],
+    ],
+    'components' => [
+        'request' => [
+            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+			'cookieValidationKey' => 'aabbccddeeaabbccddeeaabbccddeeaa',
+            'baseUrl' => '',
+        ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
+        'user' => [
+            'identityClass' => 'app\models\User',
+            'enableAutoLogin' => true,
+        ],
+        'errorHandler' => [
+            'errorAction' => 'site/error',
+        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            'useFileTransport' => FALSE,
+        ],
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning'],
+                ],
+            ],
+        ],
+        'db' => $db,
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+//            'suffix' => '.html', //???
+            'rules' => [
+                //                [
+//                    'pattern' => '/',
+//                    'route' => 'apartment/index',
+//                    'suffix' => ''
+//                ],
+                #Site
+                'sitemap.xml' => 'site/sitemap', // мапа сайту
+                //'about' => 'site/about',
+                'site/contact' => 'site/contact',
+                'site/captcha' => 'site/captcha',
+                'site/search' => 'site/search',
+                'site/error' => 'site/error',
+                'login' => 'site/login',
+                'logout' => 'site/logout',
+                //'contact' => 'site/contact',
+                'signup' => 'site/signup',
+                'request-password-reset' => 'site/request-password-reset',
+
+                'departments-map' => 'site/departments-map',
+
+                #site/static
+                //'site/<alias:>' => 'site/static',
+                'site/<alias:[0-9a-zæøå-]+>' => 'site/static',
+
+                #доступ до адмін панелі
+                'admin' => 'admin/',
+
+                #article-categories
+                'article-category/<id:\d+>' => 'article-category/view',
+                'article-category/<alias:[0-9a-zæøå-]+>' => 'article-category/view',
+                'article-category/<id:\d+>/page/<page:\d+>' => 'article-category/view',
+
+                #article model
+                'article/page/<page:\d+>' => 'article/index',
+                'article/index' => 'article/index',
+                'article/<id:\d+>' => 'article/view',
+                'article/<alias:[0-9a-zæøå-]+>' => 'article/view',
+
+                #doctor model
+                'doctor/page/<page:\d+>' => 'doctor/index',
+                'doctor/index' => 'doctor/index',
+                'doctor/<id:\d+>' => 'doctor/view',
+                'doctor/<alias:[0-9a-zæøå-]+>' => 'doctor/view',
+
+                #department model
+                'department/index' => 'department/index',
+                'department/<id:\d+>' => 'department/view',
+                'department/<alias:[0-9a-zæøå-]+>' => 'department/view',
+
+                #banner model
+                'banner/<id:\d+>' => 'banner/view',
+            ],
+            //Підключення пакету інтернаціоналізації: codemix/yii2-localeurls
+            'class' => 'codemix\localeurls\UrlManager',
+            'languages' => ['uk' => 'uk-UA', 'en' => 'en-GB'],
+            'enableDefaultLanguageUrlCode' => true,
+            'ignoreLanguageUrlPatterns' => [
+                // route pattern => url pattern
+                '#^site/sitemap#' => '#^sitemap.xml#',
+            ],
+        //*************************************************************
+        ],
+        //Підключаємо компонент налаштувань web-додатку
+        'setting'=> [
+            'class' => 'app\components\SettingComponent',
+            'cache' => 3600,
+        ],
+        //Підключаємо компонент авто-виконання по подіям
+        'autoRunComponent'=> [
+            'class' => 'app\components\AutoRunComponent'
+        ],
+        //Підключений компонент для інтернаціоналізації
+        'i18n' => [
+            'translations' => [
+                'lang*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                ],
+            ],
+        ],
+        //Вимкнути bootstrap.css для всіх віджетів
+        'assetManager' => [
+            'bundles' => [
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => []
+                ]
+            ]
+        ],
+    ],
+    'controllerMap' => [
+        'elfinder' => [
+            'class' => 'mihaildev\elfinder\PathController',
+            'as access' => [
+                'class' => yii\filters\AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->isAdmin();
+                        }
+                    ],
+                ],
+            ],
+            'root' => [
+                'baseUrl'=>'/web',
+                //'basePath'=>'@webroot',
+                'path' => 'uploads',
+                'name' => 'Uploads'
+            ],
+//            'watermark' => [
+//                        'source'         => __DIR__.'/logo.png', // Path to Water mark image
+//                         'marginRight'    => 5,          // Margin right pixel
+//                         'marginBottom'   => 5,          // Margin bottom pixel
+//                         'quality'        => 95,         // JPEG image save quality
+//                         'transparency'   => 70,         // Water mark image transparency ( other than PNG )
+//                         'targetType'     => IMG_GIF|IMG_JPG|IMG_PNG|IMG_WBMP, // Target image formats ( bit-field )
+//                         'targetMinPixel' => 200         // Target image minimum pixel size
+//            ]
+        ]
+    ],
+    'params' => $params,
+];
+
+if (YII_ENV_DEV) {
+    // configuration adjustments for 'dev' environment
+    $config['bootstrap'][] = 'debug';
+    $config['modules']['debug'] = [
+        'class' => 'yii\debug\Module',
+            // uncomment the following to add your IP if you are not connecting from localhost.
+            //'allowedIPs' => ['127.0.0.1', '::1'],
+    ];
+
+    $config['bootstrap'][] = 'gii';
+    $config['modules']['gii'] = [
+        'class' => 'yii\gii\Module',
+            // uncomment the following to add your IP if you are not connecting from localhost.
+            //'allowedIPs' => ['127.0.0.1', '::1'],
+    ];
+}
+
+return $config;
