@@ -23,27 +23,29 @@ class BootstrapComponent implements BootstrapInterface {
 //            }
 //        );
 
-/*
- * Формат масиву LANGUAGES, масив конвенртований функцією serialize - використайте unserialize
- * Yii::$app->setting->get('LANGUAGES')
- *        $languages = [
+        /*
+        * Формат масиву LANGUAGES, масив unserialize в SettingComponent
+        * Yii::$app->setting->get('LANGUAGES')
+        * $languages = [
             [
+                'status' => 1,
                 'default' => 1,
                 'name' => 'Українська',
                 'url' => 'uk',
                 'local' => 'uk-UA'
             ],
             [
+                'status' => 1,
                 'default' => 0,
                 'name' => 'English',
                 'url' => 'en',
                 'local' => 'en-GB'
             ]
         ];
- */
+        */
 
         #Встановлюємо мову по замовчуванню та передаємо масив мов в urlManager, взяті з налаштувань
-        $arrLanguages = unserialize($app->setting->get('LANGUAGES'));
+        $arrLanguages = $app->setting->get('LANGUAGES');
         $urlManagerLanguages = [];
         foreach ($arrLanguages as $item) {
             if ($item['default']) $app->language = $item['local'];

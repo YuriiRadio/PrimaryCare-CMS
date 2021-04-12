@@ -9,7 +9,7 @@ $this->title = Yii::t('lang', 'Update Department Type: {nameAttribute}', [
     'nameAttribute' => $model->id,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('lang', 'Department Types'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => @$model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('lang', 'Update');
 ?>
 <div class="department-type-update">

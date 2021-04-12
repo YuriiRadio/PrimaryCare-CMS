@@ -1,11 +1,12 @@
 <?php
-
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-
 /* @var $this yii\web\View */
 /* @var $model app\modules\admin\models\StaticPageSearch */
 /* @var $form yii\widgets\ActiveForm */
+
+use yii\helpers\Html;
+//use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
+
 ?>
 
 <div class="static-page-search">

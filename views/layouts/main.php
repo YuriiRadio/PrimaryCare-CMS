@@ -3,16 +3,19 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use app\widgets\Alert;
 use yii\helpers\Html;
 //use yii\helpers\Url;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
+//use yii\bootstrap\Nav;
+//use yii\bootstrap\NavBar;
+use yii\bootstrap4\NavBar;
+use yii\bootstrap4\Nav;
 use app\assets\AppAsset;
+use yii\bootstrap4\Breadcrumbs;
+use app\widgets\Alert;
 
 AppAsset::register($this);
-$this->registerJsFile('@web/js/share42/share42.js', ['depends' => ['yii\web\YiiAsset', 'yii\bootstrap\BootstrapAsset']]);
+$this->registerJsFile('@web/js/share42/share42.js', ['depends' => ['yii\web\YiiAsset']]);
+$this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css', ['depends' => ['yii\bootstrap4\BootstrapAsset']]);
 
 #******New Year*****
 //$this->registerJsFile('@web/js/jquery.snow.js', ['depends' => ['yii\web\YiiAsset', 'yii\bootstrap\BootstrapAsset']]);
@@ -38,80 +41,84 @@ $this->registerJsFile('@web/js/share42/share42.js', ['depends' => ['yii\web\YiiA
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrap">
-    <!--#******New Year*****-->
-    <span class="new_year_logo"></span>
-    <!--#******End New Year*****-->
-    <span class="logo_icon"></span>
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'nav navbar-nav navbar-left'],
-        'items' => [
-            ['label' => Yii::t('lang', 'Home'), 'url' => ['/']],
-            app\widgets\StaticPageMenuWidget::widget(['position' => 'header']),
-            //['label' => 'About', 'url' => ['/site/about']],
-            ['label' => '<span class="glyphicon glyphicon-envelope"></span>&nbsp;' . Yii::t('lang', 'Contact Us'), 'url' => ['/site/contact'], 'encode' => false],
-            ['label' => '<span class="glyphicon glyphicon-map-marker"></span>&nbsp;' . Yii::t('lang', 'Map'), 'url' => ['site/departments-map/'], 'encode' => false],
-            Yii::$app->user->isGuest ? (
-                ['label' => Yii::t('lang', 'Login'), 'url' => ['/site/login']]
-            ) : (
-                (Yii::$app->user->identity->isAdmin() ? (
-                    '<li>'
-                    //.'<a href='.Url::to(['/admin']).'><span class="glyphicon glyphicon-cog"></span>'.'&nbsp;'.Yii::t('lang', 'Admin panel').'</a>'
-                    .   Html::a('<span class="glyphicon glyphicon-cog"></span>' . '&nbsp;' . Yii::t('lang', 'Admin panel'), ['/admin'])."\n"
-                    .'</li>'
-                ) : '')
-                .'<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(Yii::t('lang', 'Logout').' (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            ),
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'nav navbar-nav navbar-right'],
-        'items' => [
-            // Пошук - варіант другий
-            Html::beginForm(['/site/search'], 'post', ['class' => 'navbar-form navbar-left'])
-            .Html::input('text', 'search', '', ['placeholder' => Yii::t('lang', 'Search').'... >= 4', 'size' => 7, 'class' => 'form-control'])
-            .Html::endForm(),
-            app\widgets\LanguageWidget::widget(),
-            // Пошук - варіант перший
-            //'<form class="navbar-form navbar-right">'
-            //.'<input class="form-control" placeholder="Пошук..." type="text">'
-            //.'</form>'
-        ]
-    ]);
-    NavBar::end();
-    ?>
+<div class="wrapper">
+    <header>
+        <!--#******New Year*****-->
+        <span class="new_year_logo"></span>
+        <!--#******End New Year*****-->
+        <span class="logo_icon"></span>
+        <?php
+        NavBar::begin([
+            'brandLabel' => Yii::$app->name,
+            'brandUrl' => Yii::$app->homeUrl,
+            'options' => [
+                'class' => 'navbar navbar-expand-md navbar-dark bg-dark',
+            ],
+        ]);
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav mr-auto'],
+            'items' => [
+                ['label' => Yii::t('lang', 'Home'), 'url' => ['/']],
+                app\widgets\StaticPageMenuWidget::widget(['position' => 'header']),
+                //['label' => 'About', 'url' => ['/site/about']],
+                ['label' => '<i class="bi bi-mailbox"></i>&nbsp;' . Yii::t('lang', 'Contact Us'), 'url' => ['/site/contact'], 'encode' => false],
+                ['label' => '<i class="bi bi-map"></i>&nbsp;' . Yii::t('lang', 'Map'), 'url' => ['site/departments-map/'], 'encode' => false],
+                Yii::$app->user->isGuest ? (
+                    ['label' => '<i class="bi bi-key"></i>&nbsp;' .Yii::t('lang', 'Login'), 'url' => ['/site/login'], 'encode' => false]
+                ) : (
+                    (Yii::$app->user->identity->isAdmin() ? (
+                        '<li class="nav-item">'
+                        //.'<a href='.Url::to(['/admin']).'><span class="glyphicon glyphicon-cog"></span>'.'&nbsp;'.Yii::t('lang', 'Admin panel').'</a>'
+                        .   Html::a('<i class="bi bi-gear"></i>' . '&nbsp;' . Yii::t('lang', 'Admin panel'), ['/admin'], ['class' => 'nav-link'])."\n"
+                        .'</li>'
+                    ) : '')
+                    .'<li class="nav-item">'
+                    . Html::beginForm(['/site/logout'], 'post')
+                    . Html::submitButton(Yii::t('lang', 'Logout').' (' . Yii::$app->user->identity->username . ')',
+                        ['class' => 'btn btn-link nav-link']
+                    )
+                    . Html::endForm()
+                    . '</li>'
+                ),
+    //            Html::beginForm(['/site/search'], 'post', ['class' => 'form-inline'])
+    //            . Html::input('text', 'search', '', ['placeholder' => Yii::t('lang', 'Search').'... >= 4', 'size' => 7, 'class' => 'form-control'])
+    //            . Html::endForm(),
+    //            app\widgets\LanguageWidget::widget(),
+            ],
+        ]);
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav mr-auto'],
+            'items' => [
+                // Пошук - варіант другий
+                Html::beginForm(['/site/search'], 'post', ['class' => 'form-inline'])
+                .Html::input('text', 'search', '', ['placeholder' => Yii::t('lang', 'Search').'... >= 4', 'size' => 7, 'class' => 'form-control'])
+                .Html::endForm(),
+                app\widgets\LanguageWidget::widget(),
+            ]
+        ]);
+        NavBar::end();
+        ?>
+    </header>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+        <?= Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [], ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
         <div class="row">
-            <div class="share42init pull-right" data-description="КНП Березнівський Центр ПМД" data-title="КНП Березнівський Центр ПМД"></div>
+            <div class="col">
+                <div class="share42init float-right" data-description="КНП Березнівський Центр ПМД" data-title="КНП Березнівський Центр ПМД"></div>
+            </div>
         </div>
     </div>
+
 </div>
 
-<footer class="footer">
+<footer>
     <div class="container">
-        <p class="pull-left">&copy; <?= Yii::$app->name?> 2018 <?= '- '.date('Y') ?></p>
-        <p class="pull-left"><?= app\widgets\StaticPageMenuWidget::widget(['position' => 'footer']) ?>|&nbsp;<a href="/sitemap.xml">Sitemap</a></p>
-        <p class="pull-right"><?= Yii::powered().'&nbsp;-&nbsp;'.Html::a('Yurii Radio', 'https://github.com/YuriiRadio', ['target' => '_blank']) ?></p>
+        <p class="float-right"><?= Yii::powered().'&nbsp;-&nbsp;'.Html::a('Yurii Radio', 'https://github.com/YuriiRadio', ['target' => '_blank']) ?></p>
+        <p>
+            &copy; <?= Yii::$app->name?> 2018 <?= '- '.date('Y') ?><?= app\widgets\StaticPageMenuWidget::widget(['position' => 'footer']) ?>|&nbsp;<a href="/sitemap.xml">Sitemap</a>
+        </p>
     </div>
 </footer>
 

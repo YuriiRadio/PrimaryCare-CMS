@@ -1,24 +1,41 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace app\widgets;
 
 use Yii;
 use yii\base\Widget;
 
+/*
+    * Формат масиву LANGUAGES, масив unserialize в SettingComponent
+    * Yii::$app->setting->get('LANGUAGES')
+    * $languages = [
+        [
+            'status' => 1,
+            'default' => 1,
+            'name' => 'Українська',
+            'url' => 'uk',
+            'local' => 'uk-UA'
+        ],
+        [
+            'status' => 1,
+            'default' => 0,
+            'name' => 'English',
+            'url' => 'en',
+            'local' => 'en-GB'
+        ]
+    ];
+*/
+
 /**
  * Description of LanguageWidget
  *
- * @author Velizar
+ * @author Yurii Radio
  */
 class LanguageWidget extends Widget {
 
     public $type; #alternate, switch
+    public $current_lang;
+    public $lang_arr;
 
     public function init() {
         parent::init();
@@ -26,27 +43,30 @@ class LanguageWidget extends Widget {
 //        if ($this->type == null) {
 //            $this->type = 'switch';
 //        }
+
+        $this->lang_arr = Yii::$app->setting->get('LANGUAGES');
     }
 
     public function run() {
-        $lang = Yii::$app->language;
-        $lang_arr = Yii::$app->components['urlManager']['languages'];
-//        $lang_arr = Yii::$app->urlManager->languages;
-        $lang_url = array_search($lang, Yii::$app->components['urlManager']['languages']);
-        unset($lang_arr[$lang_url]);
-        //asort($lang_arr);
-        //debug($lang_arr, true);
 
         if ($this->type == 'alternate') {
             return $this->render('language/link', [
-                        'current' => $lang,
-                        'languages' => $lang_arr,
+                        'lang_arr' => $this->lang_arr,
             ]);
         }
 
+        foreach ($this->lang_arr as $lang_key => $lang_val) {
+            if ($lang_val['local'] == Yii::$app->language) {
+                $this->current_lang = $lang_val;
+                #Delete the current language from $this->lang_arr
+                unset($this->lang_arr[$lang_key]);
+                break;
+            }
+        }
+
         return $this->render('language/view', [
-                    'current' => $lang,
-                    'languages' => $lang_arr,
+                    'current_lang' => $this->current_lang,
+                    'lang_arr' => $this->lang_arr,
         ]);
     }
 

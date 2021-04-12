@@ -1,10 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+//use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
 $this->title = Yii::t('lang', 'Update setting').': '.$model->label;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('lang', 'Settings'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->label];
 $this->params['breadcrumbs'][] = Yii::t('lang', 'Update');
 
 ?>
@@ -17,14 +19,16 @@ $this->params['breadcrumbs'][] = Yii::t('lang', 'Update');
 
     <div class="row">
         <div class="col-sm-12 col-md-12">
-            <table class="table table-hover table-bordered">
-                <tr>
-                    <th><b><?= Yii::t('lang', 'Label') ?></b></th>
-                    <th><b><?= Yii::t('lang', 'Param') ?></b></th>
-                    <th><b><?= Yii::t('lang', 'Value') ?></b></th>
-                    <th><b><?= Yii::t('lang', 'Default') ?></b></th>
-                    <th><b><?= Yii::t('lang', 'Type') ?></b></th>
-                </tr>
+            <table class="table table-hover table-bordered table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th><b><?= Yii::t('lang', 'Label') ?></b></th>
+                        <th><b><?= Yii::t('lang', 'Param') ?></b></th>
+                        <th><b><?= Yii::t('lang', 'Value') ?></b></th>
+                        <th><b><?= Yii::t('lang', 'Default') ?></b></th>
+                        <th><b><?= Yii::t('lang', 'Type') ?></b></th>
+                    </tr>
+                </thead>
                 <tr>
                     <td><?= Html::encode($model->label) ?></td>
                     <td><?= Html::encode($model->param) ?></td>

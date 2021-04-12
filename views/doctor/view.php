@@ -9,12 +9,11 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('lang', 'Doctors'), 'url' =>
 $this->params['breadcrumbs'][] = @$model->name;
 
 ?>
-
 <div class="row">
 
-    <div class="col-sm-6 col-md-6 col-lg-6">
-        <div class="thumbnail">
-            <?= Html::img('@web/web/uploads/doctor-fotos/'.$model->image, ['alt' => @$model->name]) ?>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <?= Html::img('@web/web/uploads/doctor-fotos/'.$model->image, ['alt' => @$model->name, 'class' => 'card-img-top doctor-view-img']) ?>
         </div>
     </div>
     <?php
@@ -49,8 +48,8 @@ $this->params['breadcrumbs'][] = @$model->name;
         });
     </script>
     <!--Кінець скрипта-->
-    <div class="col-sm-6 col-md-6 col-lg-6">
-        <table class="table table-hover">
+    <div class="col-12 col-md-6">
+        <table class="table table-hover doctor-view-table">
             <tr>
                 <td><b><?= Yii::t('lang', 'Specialization') ?>:</b></td>
                 <td><?= @$model->specialization->name ?></td>
@@ -84,7 +83,7 @@ $this->params['breadcrumbs'][] = @$model->name;
                 <td><b><?= Yii::t('lang', 'Number of patients') ?>:</b></td>
                 <td>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="<?= $model->number_patients ?>"
+                        <div class="progress-bar progress-bar-striped bg-info progress-bar-animated" role="progressbar" aria-valuenow="<?= $model->number_patients ?>"
                             aria-valuemin="0" aria-valuemax="<?= $model->allowed_number_patients ?>" style="width:100%">
                             <?= Yii::t('lang', 'Total')?>: <?= $model->number_patients ?>
                         </div>
@@ -118,13 +117,13 @@ $this->params['breadcrumbs'][] = @$model->name;
                     $patients_danger_percent= round($patients_danger / ($patients_success + $patients_warning + $patients_danger ? $patients_success + $patients_warning + $patients_danger : 1) * 100, 2, PHP_ROUND_HALF_UP);
                     ?>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-success" role="progressbar" style="width:<?= $patients_success_percent ?>%">
+                        <div class="progress-bar bg-success" role="progressbar" style="width:<?= $patients_success_percent ?>%">
                             <?= $patients_success ?>
                         </div>
-                        <div class="progress-bar progress-bar-warning" role="progressbar" style="width:<?= $patients_warning_percent ?>%">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width:<?= $patients_warning_percent ?>%">
                             <?= $patients_warning ?>
                         </div>
-                        <div class="progress-bar progress-bar-danger" role="progressbar" style="width:<?= $patients_danger_percent ?>%">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width:<?= $patients_danger_percent ?>%">
                             <?= $patients_danger ?>
                         </div>
                     </div>
@@ -132,9 +131,7 @@ $this->params['breadcrumbs'][] = @$model->name;
             </tr>
             <tr>
                 <td><b><?= Yii::t('lang', 'Updated') ?>:</b></td>
-                <td><?= date("d.m.Y", $model->updated_at) ?></td>
-                <td><span class="glyphicon glyphicon-eye-open small"></span></td>
-                <td><?= $model->views ?></td>
+                <td><?= date("d.m.Y", $model->updated_at) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-eye-fill"></i><?= $model->views ?></td>
             </tr>
             <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin()): ?>
                 <tr>
@@ -150,15 +147,15 @@ $this->params['breadcrumbs'][] = @$model->name;
          </table>
     </div>
 
-    <div class="col-sm-12 col-md-12 col-lg-12">
+    <?php if(!empty(@$model->body)): ?>
+        <div class="col-12">
         <table class="table table-hover">
-        <?php if(!empty(@$model->body)): ?>
             <tr>
                 <td><b><?= Yii::t('lang', 'Body') ?>:</b></td>
                 <td><?= @$model->body ?></td>
             </tr>
-        <?php endif; ?>
         </table>
-    </div>
+        </div>
+    <?php endif; ?>
 
 </div>

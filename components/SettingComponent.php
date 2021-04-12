@@ -87,10 +87,55 @@ class SettingComponent extends Component {
         }
 
         foreach ($items as $item) {
+
+            if ($item['param'] == 'LANGUAGES') {
+                $this->paramLanguages($item);
+                continue;
+            }
+
             if ($item['param']) {
                 $this->data[$item['param']] = $item['value'] === '' ? $item['default'] : $item['value'];
             }
         }
+    }
+
+    private function paramLanguages($item) {
+        /*
+        * Формат масиву LANGUAGES, масив конвертований функцією serialize - використайте unserialize
+        * Yii::$app->setting->get('LANGUAGES')
+        * $languages = [
+            [
+                'status' => 1,
+                'default' => 1,
+                'name' => 'Українська',
+                'url' => 'uk',
+                'local' => 'uk-UA'
+            ],
+            [
+                'status' => 1,
+                'default' => 0,
+                'name' => 'English',
+                'url' => 'en',
+                'local' => 'en-GB'
+            ]
+        ];
+        */
+        $arrLanguages = unserialize($item['value'] === '' ? $item['default'] : $item['value']);
+        #Видаляємо елементи LANGUAGES з status = 0
+        foreach ($arrLanguages as $key => $value) {
+            if (!$value['status']) {
+                unset ($arrLanguages[$key]);
+            }
+        }
+        #Сортуємо елементи LANGUAGES, з default = 1 на перше місце, інші по першим двом буквам local
+        usort($arrLanguages, function($a, $b){
+            if ($a['default'] || $b['default']) {
+                return ($a['default'] < $b['default']);
+            }
+            return strncmp($a['local'], $b['local'], 2);
+        });
+        $this->data[$item['param']] = $arrLanguages;
+
     }
 
     public function get($key) {

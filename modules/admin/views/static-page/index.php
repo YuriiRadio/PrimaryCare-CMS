@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\admin\models\StaticPageSearch */
@@ -18,8 +19,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a(Yii::t('lang', 'Create Static Page'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+<?php Pjax::begin(); ?>
     <?= GridView::widget([
+        'pager' => [
+            'class' => 'yii\bootstrap4\LinkPager'
+        ],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -45,7 +49,36 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_at',
             //'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'update' =>  function($url,$model) {
+                        return Html::a('<i class="bi bi-pencil"></i>', $url, [
+                            'title' => Yii::t('lang', 'Update')
+                        ]);
+                    },
+                    'view' =>  function($url,$model) {
+                        return Html::a('<i class="bi bi-eye"></i>', $url, [
+                            'title' => Yii::t('lang', 'View')
+                        ]);
+                    },
+//                  'delete' => function($url,$model) {
+//                      return Html::a('<i class="bi bi-trash"></i>', $url, [
+//                           'title' => Yii::t('lang', 'delete')
+//                      ]);
+//                    }
+                    'delete' => function($url,$model) {
+                        return Html::a('<i class="bi bi-trash"></i>', $url, [
+                            'title' => Yii::t('lang', 'Delete'),
+//                            'class' => 'btn btn-danger',
+                            'data' => [
+                                'confirm' => Yii::t('lang', 'Are you sure you want to delete this item?'),
+                                'method' => 'post',
+                            ],
+                        ]);
+                    }
+                 ]
+            ],
         ],
     ]); ?>
+<?php Pjax::end(); ?>
 </div>

@@ -1,0 +1,10 @@
+v1.1
+1. UPG: Bootstrap 3.4 on Bootstrap 4.6
+2. ADD: CMS automatic update system from the repository
+3. ADD: BootstrapComponent - BootstrapInterface
+4. DEL: ArticleCategoryMenuWidget.php, delegated to TreeMenuWidget.php
+5. ADD: paramLanguages to SettingComponent
+6. ADD: AutoRunComponent
+
+v1.0
+1. Start of the project (The main functionality is made)

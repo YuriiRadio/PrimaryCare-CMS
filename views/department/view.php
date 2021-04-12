@@ -8,9 +8,8 @@ use yii\helpers\Html;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('lang', 'Departments'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = @$model->name;
 
-//$this->registerJsFile('https://maps.googleapis.com/maps/api/js?key=AIzaSyDZFzw6EgIzZK-SwBk-0mcKLoCU0fJFJtA', ['depends' => ['yii\web\YiiAsset', 'yii\bootstrap\BootstrapAsset']]);
-$this->registerJsFile('@web/js/department.js', ['depends' => ['yii\web\YiiAsset', 'yii\bootstrap\BootstrapAsset']]);
-$this->registerJsFile('https://maps.googleapis.com/maps/api/js?key=AIzaSyDZFzw6EgIzZK-SwBk-0mcKLoCU0fJFJtA&callback=initMap&language='.Yii::$app->language, ['depends' => ['yii\web\YiiAsset', 'yii\bootstrap\BootstrapAsset']]);
+$this->registerJsFile('@web/js/department.js', ['depends' => ['yii\web\YiiAsset']]);
+$this->registerJsFile('https://maps.googleapis.com/maps/api/js?key='.Yii::$app->setting->get('GOOGLE.MAP_API').'&callback=initMap&language='.Yii::$app->language, ['depends' => ['yii\web\YiiAsset']]);
 
 ?>
 <div class="row">
@@ -59,7 +58,7 @@ $this->registerJsFile('https://maps.googleapis.com/maps/api/js?key=AIzaSyDZFzw6E
 <hr />
 <div class="row">
     <b><p><?= Yii::t('lang', 'Doctors')?>:</p></b>
-    
+
     <table class="table table-hover">
         <thead>
             <th><b>#</b></th>

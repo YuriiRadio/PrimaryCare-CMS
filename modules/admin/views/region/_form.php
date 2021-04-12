@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+//use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ArticleCategory */
@@ -12,16 +13,21 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
-
-    <?php //echo $form->field($model, 'parent_id')->textInput(['maxlength' => true]) ?>
-    <div class="form-group field-region-parent_id has-success">
-        <label class="control-label" for="region-parent_id"><?= Yii::t('lang', 'Parent region'); ?></label>
-        <select id="region-parent_id" class="form-control" name="Region[parent_id]">
-            <option value="0"><?= Yii::t('lang', 'Independent region'); ?></option>
-            <?php echo app\widgets\TreeMenuWidget::widget(['tpl' => 'select_self_menu', 'className' => app\models\Region::className(), 'model' => $model]); ?>
-        </select>
-        <div class="help-block"></div>
+    <div class="row">
+        <div class="col-6">
+            <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-6">
+            <?php //echo $form->field($model, 'parent_id')->textInput(['maxlength' => true]) ?>
+            <div class="form-group field-region-parent_id has-success">
+                <label class="control-label" for="region-parent_id"><?= Yii::t('lang', 'Parent region'); ?></label>
+                <select id="region-parent_id" class="form-control" name="Region[parent_id]">
+                    <option value="0"><?= Yii::t('lang', 'Independent region'); ?></option>
+                    <?php echo app\widgets\TreeMenuWidget::widget(['tpl' => 'select_self_menu', 'className' => app\models\Region::className(), 'model' => $model]); ?>
+                </select>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
     </div>
 
     <hr />
@@ -30,7 +36,9 @@ use yii\widgets\ActiveForm;
         <!-- Навігація name-->
         <ul class="nav nav-tabs">
             <?php $flagActive = true; foreach ($i18nMessages as $index => $i18nMessage): ?>
-            <li<?php if ($flagActive) { echo ' class="active"'; } ?>><a href="#<?= $i18nMessage->language.'_name' ?>" data-toggle="tab"><?= Html::img('@web/images/flagicons/'.$i18nMessage->language.'.png').'&nbsp;'.$i18nMessage->language; ?></a></li>
+            <li class="nav-item">
+                <a class="nav-link<?php if ($flagActive) { echo ' active'; } ?>" href="#<?= $i18nMessage->language.'_name' ?>" data-toggle="tab"><?= Html::img('@web/images/flagicons/'.$i18nMessage->language.'.png').'&nbsp;'.$i18nMessage->language; ?></a>
+            </li>
             <?php $flagActive = false; endforeach; ?>
         </ul>
         <!-- Вміст вкладок name-->

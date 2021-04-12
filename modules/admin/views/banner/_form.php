@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+//use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
 use mihaildev\ckeditor\CKEditor;
 use mihaildev\elfinder\ElFinder;
@@ -17,12 +18,14 @@ use yii\jui\DatePicker;
 <div class="banner-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
-    <div class="row">
-        <div class="col-sm-1 col-md-1">
-            <?php //echo $form->field($model, 'status')->textInput() ?>
-            <?= $form->field($model, 'status')->checkbox([ '0', '1']) ?>
+
+    <div class="row align-items-center">
+        <div class="col-sm-2 col-md-2">
+            <div class="custom-control custom-switch">
+                <?= $form->field($model, 'status')->checkbox([ '0', '1']) ?>
+            </div>
         </div>
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <?= $form->field($model, 'position')->dropDownList([ 'top' => 'Top', 'bottom' => 'Bottom', 'left' => 'Left', 'right' => 'Right', 'center' => 'Center',], ['prompt' => '']) ?>
         </div>
         <div class="col-sm-3 col-md-3">
@@ -38,7 +41,9 @@ use yii\jui\DatePicker;
                 <!-- Навігація name-->
                 <ul class="nav nav-tabs">
                     <?php $flagActive = true; foreach ($i18nMessages as $index => $i18nMessage): ?>
-                    <li<?php if ($flagActive) { echo ' class="active"'; } ?>><a href="#<?= $i18nMessage->language.'_name' ?>" data-toggle="tab"><?= Html::img('@web/images/flagicons/'.$i18nMessage->language.'.png').'&nbsp;'.$i18nMessage->language; ?></a></li>
+                    <li class="nav-item">
+                        <a class="nav-link<?php if ($flagActive) { echo ' active'; } ?>" href="#<?= $i18nMessage->language.'_name' ?>" data-toggle="tab"><?= Html::img('@web/images/flagicons/'.$i18nMessage->language.'.png').'&nbsp;'.$i18nMessage->language; ?></a>
+                    </li>
                     <?php $flagActive = false; endforeach; ?>
                 </ul>
                 <!-- Вміст вкладок name-->
@@ -59,21 +64,22 @@ use yii\jui\DatePicker;
 
     <hr />
 
-    <?= $form->field($model, 'url_link')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col-12">
+            <?= $form->field($model, 'url_link')->textInput(['maxlength' => true]) ?>
+        </div>
+    </div>
 
     <hr />
 
-    <div class="form-group">
-        <div class="thumbnail pull-left">
-            <?= Html::img('@web/web/uploads/banners/'.$model->image, ['alt' => @$model->name ]) ?>
+    <div class="row">
+        <div class="col-auto text-center">
+            <?= Html::img('@web/web/uploads/banners/'.$model->image, ['alt' => @$model->name, 'class' => 'card-img']) ?>
             <?php if ($model->image <> 'no-image.png'): ?>
-            <div class="text-center">
-                <?= Html::a('<span class="glyphicon glyphicon-trash"></span>', ['banner/del-image', 'id' => $model->id], ['title' => Yii::t('lang', 'Delete')]) ?>
-            </div>
+                <?= Html::a('<i class="bi bi-trash"></i>', ['banner/del-image', 'id' => $model->id], ['title' => Yii::t('lang', 'Delete')]) ?>
             <?php endif; ?>
         </div>
     </div>
-    <span class="clearfix"></span>
 
     <?php if ($model->image == 'no-image.png') :?>
         <?php echo $form->field($model, 'imageFile')->fileInput(['multiple' => false, 'accept' => 'image/*']) ?>
@@ -84,6 +90,8 @@ use yii\jui\DatePicker;
     <?php //echo $form->field($model, 'created_at')->textInput(['maxlength' => true]) ?>
 
     <?php //echo $form->field($model, 'updated_at')->textInput(['maxlength' => true]) ?>
+
+    <hr />
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('lang', 'Save'), ['class' => 'btn btn-success']) ?>

@@ -20,7 +20,8 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/bootstrap_united.css',
+//       'css/bootstrap_united.css', //Bootstrap v3.4.1
+        'css/bootstrap_united.min.css',   //Bootstrap v4.6.0
         'css/site.css',
     ];
     public $js = [
@@ -28,7 +29,8 @@ class AppAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
+//        'yii\bootstrap\BootstrapAsset', //Bootstrap v3.4.1
+        'yii\bootstrap4\BootstrapAsset', //Bootstrap v4.6.0
     ];
     public $jsOptions = ['position' => \yii\web\View::POS_HEAD];
 }

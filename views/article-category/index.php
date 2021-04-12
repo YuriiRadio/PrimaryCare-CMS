@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Url;
-use yii\widgets\LinkPager;
+//use yii\widgets\LinkPager;
+use yii\bootstrap4\LinkPager;
 
 $this->params['breadcrumbs'][] = Yii::t('lang', 'Articles');
 ?>
@@ -16,11 +17,12 @@ $this->params['breadcrumbs'][] = Yii::t('lang', 'Articles');
                 <div class="col-xs-6 col-lg-4">
                     <h3><a href="<?= Url::to(['article/view', 'id' => $article->id]); ?>"><?= $article->title ?></a></h3>
                     <ul class="list-unstyled list-inline small">
-                        <li>
-                            <span class="glyphicon glyphicon-calendar"></span>
-                            <?= ' ' . date("Y.m.d", $article->created_at) ?>
+                        <li class="list-inline-item">
+                            <i class="bi bi-calendar3"></i>
+                            <?= date("Y.m.d", $article->created_at) ?>
                         </li>
-                        <li><span class="glyphicon glyphicon-list-alt"></span>
+                        <li class="list-inline-item">
+                            <i class="bi bi-card-list"></i>
                             <a href="<?= Url::to(['article-category/view', 'id' => $article->articleCategory->id]) ?>"><?= $article->articleCategory->name ?></a>
                         </li>
                     </ul>
@@ -39,9 +41,9 @@ $this->params['breadcrumbs'][] = Yii::t('lang', 'Articles');
 
     <div class="col-sm-6 col-md-3">
 
-        <div class="panel panel-primary">
-            <div class="panel-heading"><b><?= Yii::t('lang', 'Articles')?></b></div>
-            <div class="panel-body">
+        <div class="card panel-card">
+            <div class="card-header"><b><?= Yii::t('lang', 'Articles')?></b></div>
+            <div class="card-body">
                 <ul id="tree_articles">
 <?php echo app\widgets\TreeMenuWidget::widget(['tpl' => 'article_tree_menu', 'className' => \app\models\ArticleCategory::className()]); ?>
                 </ul>

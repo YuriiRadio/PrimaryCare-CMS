@@ -182,12 +182,12 @@ class Doctor extends \yii\db\ActiveRecord {
             $upload_image_small = $upload_dir_image_small . $image_src_small;
 
             # Розмір головної картинки
-            $width = Yii::$app->setting->get('DOCTOR_IMG_WIDTH');
-            $height = Yii::$app->setting->get('DOCTOR_IMG_HEIGHT');
+            $width = Yii::$app->setting->get('DOCTOR.IMG_WIDTH');
+            $height = Yii::$app->setting->get('DOCTOR.IMG_HEIGHT');
 
             # Розмір зменшеної картинки
-            $width_small = Yii::$app->setting->get('DOCTOR_IMG_WIDTH_SMALL');
-            $height_small = Yii::$app->setting->get('DOCTOR_IMG_HEIGHT_SMALL');
+            $width_small = Yii::$app->setting->get('DOCTOR.IMG_WIDTH_SMALL');
+            $height_small = Yii::$app->setting->get('DOCTOR.IMG_HEIGHT_SMALL');
 
             switch ($image_info['mime']) {
                 case 'image/bmp' : $image = imagecreatefromwbmp($tempName);

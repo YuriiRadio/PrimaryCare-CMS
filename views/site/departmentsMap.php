@@ -4,8 +4,8 @@ use yii\helpers\Html;
 
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->registerJsFile('@web/js/departments-map.js', ['depends' => ['yii\web\YiiAsset', 'yii\bootstrap\BootstrapAsset']]);
-$this->registerJsFile('https://maps.googleapis.com/maps/api/js?key=AIzaSyDZFzw6EgIzZK-SwBk-0mcKLoCU0fJFJtA&callback=initMap&language='.Yii::$app->language, ['depends' => ['yii\web\YiiAsset', 'yii\bootstrap\BootstrapAsset']]);
+$this->registerJsFile('@web/js/departments-map.js', ['depends' => ['yii\web\YiiAsset']]);
+$this->registerJsFile('https://maps.googleapis.com/maps/api/js?key='.Yii::$app->setting->get('GOOGLE.MAP_API').'&callback=initMap&language='.Yii::$app->language, ['depends' => ['yii\web\YiiAsset']]);
 
 ?>
 <div class="site-departments">
@@ -21,7 +21,7 @@ $this->registerJsFile('https://maps.googleapis.com/maps/api/js?key=AIzaSyDZFzw6E
                 name: <?= "\"".$item['i18n']['name']."\"" ?>,
                 address: <?= "\"".$item['i18n']['street'].',&nbsp;'.$item['building']."\"" ?>,
                 phone: <?= "\"".$item['phone']."\"" ?>,
-                department_type: <?= $item['department_type_id'] ?> 
+                department_type: <?= $item['department_type_id'] ?>
             },
 <?php endforeach; ?>
         ];

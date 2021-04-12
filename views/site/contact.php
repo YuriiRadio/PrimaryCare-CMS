@@ -5,7 +5,7 @@
 /* @var $model app\models\ContactForm */
 
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 use yii\captcha\Captcha;
 
 $this->title = Yii::t('lang', 'Contact');
@@ -37,9 +37,9 @@ $this->params['breadcrumbs'][] = $this->title;
         }
         ?>
         <p>
-            <?= Yii::t('lang', 'If you have business inquiries or other questions, please fill out the following form to contact us. Thank you.')?>
+            <span class="badge badge-info" style="font-size: 110%; margin-bottom: 5px;"><?= Yii::t('lang', 'If you have business inquiries or other questions, please fill out the following form to contact us. Thank you.')?></span>
             <br />
-            <?= Yii::t('lang', 'Your IP address: {remote_ip} will be saved!!!', ['remote_ip' => $model->ip]) ?>
+            <span class="badge badge-warning" style="font-size: 120%; color: #a00"><?= Yii::t('lang', 'Your IP address: {remote_ip} will be saved!!!', ['remote_ip' => $model->ip]) ?></span>
         </p>
 
         <div class="row">
@@ -75,7 +75,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]) ?>
 
                     <?= $form->field($model, 'verifyCode')->widget(Captcha::className(), [
-                        'template' => '<div class="row"><div class="col-sm-4 col-md-4 col-lg-4">{image}</div><div class="col-sm-8 col-md-8 col-lg-8">{input}</div></div>',
+                        //'template' => '<div class="row"><div class="col-sm-4 col-md-4 col-lg-4">{image}</div><div class="col-sm-8 col-md-8 col-lg-8">{input}</div></div>',
+                        'template' => '{image}{input}',
                         'options' => ['placeholder' => Yii::t('lang', 'Enter verification code here')],
                     ]) ?>
 

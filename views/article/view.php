@@ -12,14 +12,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="article-content">
     <h2><?= Html::encode($this->title) ?></h2>
     <ul class="list-unstyled list-inline small">
-        <li>
-            <span class="glyphicon glyphicon-calendar"></span>
+        <li class="list-inline-item">
+            <i class="bi bi-calendar3"></i>
             <?= ' ' . date("Y.m.d", $article->created_at) ?>
         </li>
-        <li><span class="glyphicon glyphicon-eye-open"></span>
+        <li class="list-inline-item">
+            <i class="bi bi-eye-fill"></i>
             <?= $article->views ?>
         </li>
-        <li><span class="glyphicon glyphicon-list-alt"></span>
+        <li class="list-inline-item">
+            <i class="bi bi-card-list"></i>
             <a href="<?= Url::to(['article-category/view', 'id' => $article->articleCategory->id]) ?>"><?= $article->articleCategory->name ?></a>
         </li>
     </ul>

@@ -67,7 +67,7 @@ $script = <<< JS
 $(document).ready(function() {
     setInterval(function(){
         $('#btn_pjax_time').click();
-    }, 5000);
+    }, 10000);
 });
 
 $('#btn_pjax_time').on('click', function () {
@@ -93,23 +93,24 @@ $this->registerJs($script);
         </div>
         <div class="col-sm-9 col-md-9">
             <p>
-                <b>File:</b><code><?= __FILE__ ?></code><br />
-                <b>Dir:</b><code><?= __DIR__ ?></code><br />
-                <b>$this->context->action->uniqueId:</b><code><?= $this->context->action->uniqueId ?></code><br />
-                <b>$this->context->action->id:</b><code><?= $this->context->action->id ?></code><br />
-                <b>get_class($this->context):</b><code><?= get_class($this->context) ?></code><br />
-                <b>$this->context->module->id:</b><code><?= $this->context->module->id ?></code><br />
-                <b>Yii::$app->user->identity->username:</b><code><?= Yii::$app->user->identity->username ?></code><br />
-                <b>Yii::$app->user->identity->role:</b><code><?= Yii::$app->user->identity->role ?></code><br />
-                <b>Yii::$app->setting->get('TIME_CACHE_MENU'):</b><code><?php echo Yii::$app->setting->get('CACHE.TIME_MENU') ?></code><br />
-                <b>Yii::$app->urlManager->createAbsoluteUrl(''):</b><code><?= Yii::$app->urlManager->createAbsoluteUrl('') ?></code><br />
-                <b>Yii::$app->controller->route:</b><code><?= Yii::$app->controller->route ?></code><br />
-                <b>Url::home():</b><code><?= Url::home() ?></code><br />
-                <b>Url::base():</b><code><?= Url::base() ?></code><br />
-                <b>Url::canonical():</b><code><?= Url::canonical() ?></code><br />
-                <b>time()</b><?= time() ?><br />
-                <b>Yii::$app->request->hostInfo:</b><code><?= Yii::$app->request->hostInfo ?></code><br />
-                <b>Debug GET Request:</b><?php echo debug(Yii::$app->request->get()) ?><br />
+                <b>File: </b><code><?= __FILE__ ?></code><br />
+                <b>Dir: </b><code><?= __DIR__ ?></code><br />
+                <b>$this->context->action->uniqueId: </b><code><?= $this->context->action->uniqueId ?></code><br />
+                <b>$this->context->action->id: </b><code><?= $this->context->action->id ?></code><br />
+                <b>get_class($this->context): </b><code><?= get_class($this->context) ?></code><br />
+                <b>$this->context->module->id: </b><code><?= $this->context->module->id ?></code><br />
+                <b>Yii::$app->user->identity->username: </b><code><?= Yii::$app->user->identity->username ?></code><br />
+                <b>Yii::$app->user->identity->role: </b><code><?= Yii::$app->user->identity->role ?></code><br />
+                <b>Yii::$app->setting->get('CACHE.TIME_MENU'): </b><code><?php echo Yii::$app->setting->get('CACHE.TIME_MENU') ?></code><br />
+                <b>Yii::$app->urlManager->createAbsoluteUrl(''): </b><code><?= Yii::$app->urlManager->createAbsoluteUrl('') ?></code><br />
+                <b>Yii::$app->controller->route: </b><code><?= Yii::$app->controller->route ?></code><br />
+                <b>Url::home(): </b><code><?= Url::home() ?></code><br />
+                <b>Url::base(): </b><code><?= Url::base() ?></code><br />
+                <b>Yii::$app->homeUrl: </b><code><?= Yii::$app->homeUrl ?></code><br />
+                <b>Url::canonical(): </b><code><?= Url::canonical() ?></code><br />
+                <b>time() </b><?= time() ?><br />
+                <b>Yii::$app->request->hostInfo: </b><code><?= Yii::$app->request->hostInfo ?></code><br />
+                <b>Yii::$app->request->get(): </b><?php echo debug(Yii::$app->request->get()) ?><br />
 
             </p>
 <?php
@@ -126,14 +127,17 @@ $this->registerJs($script);
             <a href="<?= Url::to(['site/about']) ?>">link - Url Helper</a><br />
 
 <?php
-            $options = ['class' => 'btn btn-default'];
+            $options = ['class' => 'btn btn-success'];
             $lang = Yii::$app->language;
             $lang2 = array_search($lang, Yii::$app->components['urlManager']['languages']);
             echo Html::tag('div', $lang, $options);
             echo Html::tag('div', $lang2, $options);
             debug(Yii::$app->components['urlManager']['languages']);
             debug(Yii::$app->urlManager->languages);
-            debug(Yii::$app->autoRunComponent);
+
+            $arrLanguages = Yii::$app->setting->get('LANGUAGES');
+            debug($arrLanguages);
+
 //    $dir = Yii::getAlias('@app/web/assets');
 //    echo $dir;
 //   $model = [0 => Yii::t('lang', 'Any')] + \app\models\Apartment::find()

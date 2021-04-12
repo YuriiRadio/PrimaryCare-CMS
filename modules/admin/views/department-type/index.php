@@ -20,6 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?= GridView::widget([
+        'pager' => [
+            'class' => 'yii\bootstrap4\LinkPager'
+        ],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -33,7 +36,35 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             //'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'update' =>  function($url,$model) {
+                        return Html::a('<i class="bi bi-pencil"></i>', $url, [
+                            'title' => Yii::t('lang', 'Update')
+                        ]);
+                    },
+                    'view' =>  function($url,$model) {
+                        return Html::a('<i class="bi bi-eye"></i>', $url, [
+                            'title' => Yii::t('lang', 'View')
+                        ]);
+                    },
+//                  'delete' => function($url,$model) {
+//                      return Html::a('<i class="bi bi-trash"></i>', $url, [
+//                           'title' => Yii::t('lang', 'delete')
+//                      ]);
+//                    }
+                    'delete' => function($url,$model) {
+                        return Html::a('<i class="bi bi-trash"></i>', $url, [
+                            'title' => Yii::t('lang', 'Delete'),
+//                            'class' => 'btn btn-danger',
+                            'data' => [
+                                'confirm' => Yii::t('lang', 'Are you sure you want to delete this item?'),
+                                'method' => 'post',
+                            ],
+                        ]);
+                    }
+                 ]
+            ],
         ],
     ]); ?>
 </div>
