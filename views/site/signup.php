@@ -5,7 +5,7 @@
 /* @var $model \frontend\models\SignupForm */
 
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
 $this->title = Yii::t('lang', 'Signup');
 $this->params['breadcrumbs'][] = $this->title;
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p><?= Yii::t('lang', 'Please fill out the following fields to signup:') ?></p>
 
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-md-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>

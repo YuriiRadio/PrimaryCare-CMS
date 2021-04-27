@@ -15,6 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= GridView::widget([
+        'pager' => [
+            'class' => 'yii\bootstrap4\LinkPager'
+        ],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [

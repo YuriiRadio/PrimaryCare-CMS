@@ -10,7 +10,7 @@ use app\models\Banner;
 /**
  * Description of BannerWidget
  *
- * @author Velizar
+ * @author Yurii Radio
  */
 class BannerWidget extends Widget {
 

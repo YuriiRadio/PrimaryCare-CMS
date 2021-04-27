@@ -169,7 +169,17 @@ class DoctorController extends Controller
 
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete()) {
+        $model = $this->findModel($id);
+        $dir = Yii::getAlias('uploads/doctor-fotos/');
+
+        if (file_exists($dir.$model->img_src)) {
+            unlink($dir.$model->img_src);
+        }
+        if (file_exists($dir.'small/'.$model->img_src_small)) {
+            unlink($dir.'small/'.$model->img_src_small);
+        }
+
+        if ($model->delete()) {
             DoctorI18n::deleteAll(['parent_table_id' => $id]);
         }
         return $this->redirect(['index']);
@@ -201,11 +211,19 @@ class DoctorController extends Controller
         $id = intval($id);
         $model = $this->findModel($id);
         $dir = Yii::getAlias('uploads/doctor-fotos/');
-        if(@unlink($dir.$model->img_src) && @unlink($dir.'small/'.$model->img_src_small)) {
-            $model->img_src = "";
-            $model->img_src_small = "";
-            $model->save(false);
+
+        if (file_exists($dir.$model->img_src)) {
+            unlink($dir.$model->img_src);
         }
+
+        if (file_exists($dir.'small/'.$model->img_src_small)) {
+            unlink($dir.'small/'.$model->img_src_small);
+        }
+
+        $model->img_src = "";
+        $model->img_src_small = "";
+        $model->save(false);
+
         return $this->redirect(['update', 'id' => $model->id]);
     }
 

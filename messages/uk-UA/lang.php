@@ -168,8 +168,8 @@ return [
     'Update Doctor Category: {nameAttribute}' => 'Оновити лікарську категорію: {nameAttribute}',
 
     #Model Doctor Specializations
-    'Doctor Specializations' => 'Лікарські спеціальністі',
-    'Doctors specialization' => 'Лікарські спеціальністі',
+    'Doctor Specializations' => 'Лікарські спеціальності',
+    'Doctors specialization' => 'Лікарські спеціальності',
     'Create Doctor Specialization' => 'Нова лікарська спеціальність',
 
     #Doctor filters
@@ -202,4 +202,5 @@ return [
     #Tests
     'Example text' => 'Приклад тексту...',
     'Congratulations!' => 'Вітаємо',
+    'How to choose a family doctor' => 'Як обрати сімейного лікаря',
 ];

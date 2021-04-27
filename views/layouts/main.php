@@ -117,7 +117,7 @@ $this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/
     <div class="container">
         <p class="float-right"><?= Yii::powered().'&nbsp;-&nbsp;'.Html::a('Yurii Radio', 'https://github.com/YuriiRadio', ['target' => '_blank']) ?></p>
         <p>
-            &copy; <?= Yii::$app->name?> 2018 <?= '- '.date('Y') ?><?= app\widgets\StaticPageMenuWidget::widget(['position' => 'footer']) ?>|&nbsp;<a href="/sitemap.xml">Sitemap</a>
+            &copy; <?= Yii::$app->name ?> 2018 <?= '- '.date('Y') ?><?= app\widgets\StaticPageMenuWidget::widget(['position' => 'footer']) ?>|&nbsp;<a href="/sitemap.xml">Sitemap</a>
         </p>
     </div>
 </footer>

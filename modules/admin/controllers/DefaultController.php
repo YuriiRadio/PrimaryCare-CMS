@@ -25,6 +25,12 @@ class DefaultController extends AppAdminController {
         return $this->render('index', ['modelSetting' => $modelSetting]);
     }
 
+    public function actionTest() {
+
+        $this->setMeta(Yii::$app->name . ' | ' . Yii::t('lang', 'Admin panel'), Yii::$app->setting->get('SITE.KEYWORDS'), Yii::$app->setting->get('SITE.DESCRIPTION'));
+        return $this->render('test');
+    }
+
     public function actionFlush() {
 
         if (Yii::$app->request->isAjax) {

@@ -159,8 +159,8 @@ class Banner extends \yii\db\ActiveRecord
             $upload_image = $upload_dir_image . $image_src;
 
             # Розмір головної картинки
-            $width = Yii::$app->setting->get('BANNER_IMG_WIDTH');
-            $height = Yii::$app->setting->get('BANNER_IMG_HEIGHT');
+            $width = Yii::$app->setting->get('BANNER.IMG_WIDTH');
+            $height = Yii::$app->setting->get('BANNER.IMG_HEIGHT');
 
             switch ($image_info['mime']) {
                 case 'image/bmp' : $image = imagecreatefromwbmp($tempName);

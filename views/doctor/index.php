@@ -14,13 +14,8 @@ $this->registerCssFile('@web/js/wow/animate.css', ['depends' => ['app\assets\App
 $this->registerJsFile('@web/js/doctor.js', ['depends' => ['yii\web\YiiAsset']])
 ?>
 
-    <!--<span class="alert alert-info">До нового року залишилося: <b><span id="time_new_year"></span></b></span>-->
-    <div class="jumbotron">
-        <h1><?= Yii::t('lang', 'Congratulations!') ?></h1>
-        <p><span style="font-size:44px">КНП "БЕРЕЗНІВСЬКИЙ ЦЕНТР ПМД"</span></p>
-        <p><?= Html::a('Медична реформа 2018', ['article/view', 'alias' => 'medical-reform-2018']) ?> | <?= Html::a('Як обрати сімейного лікаря', ['article/view', 'alias' => 'how-to-choose-a-family-doctor']) ?></p>
-        <p><?= Html::a(Yii::t('lang', 'Last events'), ['article-category/view', 'alias' => 'events']) ?></p>
-    </div>
+<!--<span class="alert alert-info">До нового року залишилося: <b><span id="time_new_year"></span></b></span>-->
+<?php echo \app\widgets\JumbotronWidget::widget() ?>
 
 <div class="row">
     <div class="col-12 col-md-9">

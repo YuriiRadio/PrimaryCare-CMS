@@ -11,7 +11,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Department;
 use app\models\DepartmentSearch;
-use yii\web\NotFoundHttpException;
+//use yii\web\NotFoundHttpException;
 
 /**
  * Description of DepartmentController

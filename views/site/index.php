@@ -2,7 +2,8 @@
 /* @var $this yii\web\View */
 
 //$this->title = 'My Yii Application';
-use yii\bootstrap\Modal;
+//use yii\bootstrap\Modal;
+use yii\bootstrap4\Modal;
 use yii\helpers\Url;
 
 $this->registerJsFile('@web/js/doctor.js', ['depends' => ['yii\web\YiiAsset', 'yii\bootstrap\BootstrapAsset']])
@@ -98,14 +99,14 @@ $this->registerJsFile('@web/js/doctor.js', ['depends' => ['yii\web\YiiAsset', 'y
                 Вміст панелі
             </div>
         </div>
-        
+
         <div class="panel panel-default">
             <div class="panel-heading">Бокова навігаційна панель2</div>
             <div class="panel-body">
                 Вміст панелі2
             </div>
         </div>
-        
+
         <div class="panel panel-default">
             <div class="panel-heading">Бокова навігаційна панель3</div>
             <div class="panel-body">
@@ -119,15 +120,15 @@ $this->registerJsFile('@web/js/doctor.js', ['depends' => ['yii\web\YiiAsset', 'y
 
 <?php
 
-Modal::begin([
-    'id' => 'doctor-modal',
-    'header' => '<h2>Hello world</h2>',
-    'footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">Закрити</button>',
-    //'toggleButton' => ['label' => 'click me'],
-]);
-
-echo 'Say hello...';
-
-Modal::end();
+//Modal::begin([
+//    'id' => 'doctor-modal',
+//    'header' => '<h2>Hello world</h2>',
+//    'footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">Закрити</button>',
+//    //'toggleButton' => ['label' => 'click me'],
+//]);
+//
+//echo 'Say hello...';
+//
+//Modal::end();
 
 ?>

@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Banner;
-use yii\data\Pagination;
+//use yii\data\Pagination;
 
 /**
  * Description of BannerController
