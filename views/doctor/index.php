@@ -20,12 +20,12 @@ $this->registerJsFile('@web/js/doctor.js', ['depends' => ['yii\web\YiiAsset']])
 <div class="row">
     <div class="col-12 col-md-9">
 
-        <div class="row" id="doctors">
+        <div class="" id="doctors">
 
 <?php if (!empty($doctors)): ?>
 <?php $count = count($doctors); $i = 0; foreach ($doctors as $doctor): ?>
 <?php if (($i == 0) || ($i % 3 == 0)): ?><div class="row"><?php endif; ?>
-            <div class="col-12 col-sm-4">
+            <div class="col-12 col-md-4">
                 <div class="card doctor-card wow fadeInUp" data-wow-delay=".<?= $i ?>s">
                     <div class="card-img-top embed-responsive embed-responsive-4by3">
                         <?= Html::img('@web/web/uploads/doctor-fotos/small/'.$doctor->imageSmall, ['alt' => $doctor->name, 'class' => 'embed-responsive-item']) ?>

@@ -44,11 +44,11 @@ class StaticPageMenuWidget extends Widget {
                 //StaticPage::tableName().'.created_at',
                 //StaticPage::tableName().'.updated_at'
              ])
-            ->where('((`position` = :position) AND (`status` = :status) AND (`language` = :language)) AND (`alias` != :contact)')
+            ->where('((`position` = :position) AND (`status` = :status) AND (`language` = :language)) AND (`alias` != :contact) AND (`alias` != :analyses)')
             ->addParams([':position' => $this->position])
             ->addParams([':status' => StaticPage::STATUS_ACTIVE])
             ->addParams([':language' => Yii::$app->language])
-            ->addParams([':contact' => 'contact'])
+            ->addParams([':contact' => 'contact', ':analyses' => 'analyses'])
             ->asArray()
             ->all();
 

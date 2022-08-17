@@ -66,11 +66,11 @@ class SiteController extends AppController {
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
                 'minLength' => 9,
-                'maxLength' => 9,
-                'width' => 130,
-                'height' => 40,
+                'maxLength' => 12,
+                'width' => 160,
+                'height' => 70,
                 'transparent' => true,
-                'offset' => -1,
+                'offset' => -3,
             ],
         ];
     }
@@ -174,6 +174,53 @@ class SiteController extends AppController {
                         'model_db' => $model_db,
             ]);
         }
+    }
+
+    /**
+     * Displays Analyses page.
+     *
+     * @return string
+     */
+    public function actionAnalyses() {
+        if (Yii::$app->request->isAjax) {
+            return 'Ok Analyses!!!';
+        }
+
+        $model = new \app\models\AnalysesForm();
+
+        // Get cache
+        $model_static = Yii::$app->cache->get('systemPage-analyses-' . Yii::$app->language);
+        if (!$model_static) {
+            $model_static = StaticPage::find()
+                    ->innerJoin(StaticPageI18n::tableName(), '`' . StaticPageI18n::tableName() . '`.`static_page_id` = `' . StaticPage::tableName() . '`.`id`')
+                    ->select([
+                        StaticPage::tableName() . '.id',
+                        StaticPage::tableName() . '.alias',
+                        StaticPageI18n::tableName() . '.title',
+                        StaticPageI18n::tableName() . '.body',
+                        StaticPageI18n::tableName() . '.keywords',
+                        StaticPageI18n::tableName() . '.description',
+                    ])
+                    ->where('((`alias` = :page_alias) AND (`status` = :status) AND (`language` = :language))')
+                    ->addParams([':page_alias' => 'analyses'])
+                    ->addParams([':status' => StaticPage::STATUS_ACTIVE])
+                    ->addParams([':language' => Yii::$app->language])
+                    ->asArray()
+                    ->one();
+            // Set cache
+            if (!is_null($model_static)) {
+                Yii::$app->cache->set('systemPage-analyses-' . Yii::$app->language, $model_static, Yii::$app->setting->get('CACHE.TIME_PAGE'));
+            }
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            return $this->refresh();
+        }
+
+        return $this->render('analyses', [
+            'model' => $model,
+            'model_static' => $model_static,
+        ]);
     }
 
     /**
@@ -380,13 +427,6 @@ class SiteController extends AppController {
         $str = Yii::$app->request->post('search');
 
         $model = new \app\models\SiteSearch($str);
-
-//        $doctors = \app\models\Doctor::find()
-//                ->joinWith('i18n')
-//                ->where('`name` LIKE :name AND `status` = :status',
-//                        [':name' => '%габо%', ':status' => \app\models\Doctor::STATUS_ACTIVE])
-//                ->all();
-//        debug($doctors);
 
         if ($model->validate()) {
             $model->search();

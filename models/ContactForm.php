@@ -29,6 +29,7 @@ class ContactForm extends Model {
             // email has to be a valid email address
             ['email', 'email'],
             [['email', 'name', 'subject', 'body'], 'filter', 'filter' => 'trim'],
+            ['body', 'validateBody'],
             // verifyCode needs to be entered correctly
             ['verifyCode', 'captcha'],
             ['ip', 'ip'],
@@ -49,31 +50,17 @@ class ContactForm extends Model {
         ];
     }
 
-    /**
-     * Sends an email to the specified email address using the information collected by this model.
-     * @param string $email the target email address
-     * @return bool whether the model passes validation
-     */
-//    public function contactEmail($email) {
-////        $sender_info = '<br /><br /><hr />'
-////                    . Yii::t('lang','Message from site').': '
-////                    . '<a href="' . Yii::$app->urlManager->createAbsoluteUrl(['site/contact']) . '">'
-////                        .Yii::$app->urlManager->createAbsoluteUrl(['site/contact'])
-////                    . "<a>" . "<br />"
-////                    . Yii::t('lang','Sender IP address').': <b>'.$this->ip.'</b>';
-//        //$test = \yii\helpers\StringHelper::truncateHtml("<html>");
-//        return Yii::$app->mailer
-//            ->compose(
-//                    ['html' => 'contactForm-html'],
-//                    ['ip' => $this->ip, 'body' => safeString($this->body)]
-//            )
-//            ->setTo($email)
-//            ->setFrom([$this->email => safeString($this->name)])
-//            ->setSubject(safeString($this->subject))
-//            //->setTextBody($this->body.$sender_info)
-//            //->setHtmlBody(safeString($this->body).$sender_info)
-//            ->send();
-//    }
+    public function validateBody($attribute, $params, $validator) {
+        $pattern = "#porno|sex|penis|vagina|pussy|xxx#im";
+        if (preg_match($pattern, $this->$attribute)) {
+            $this->addError($attribute, Yii::t('lang', 'You have used prohibited words.'));
+        }
+
+        $pattern = "#ы|э#im";
+        if (preg_match($pattern, $this->$attribute)) {
+            $this->addError($attribute, 'Ruzke GO TO HU*.');
+        }
+    }
 
     public function contactEmail($email) {
 
@@ -81,29 +68,30 @@ class ContactForm extends Model {
         $arrEmail = array_map('trim', $arrEmail);
 
         $subject = '';
-        switch ($this->subject) {
+        switch (safeString($this->subject)) {
             case 0:
-                $subject = 'Пропозиція';
+                $subject = Yii::t('lang', 'Proposal');
                 break;
             case 1:
-                $subject = 'Питання';
+                $subject = Yii::t('lang', 'Question');
                 break;
             case 2:
-                $subject = 'Скарга';
+                $subject = Yii::t('lang', 'Complaint');
                 break;
             case 3:
-                $subject = 'Фактура / рахунок';
+                $subject = Yii::t('lang', 'Invoice / account');
                 break;
             case 4:
-                $subject = 'Інше...';
+                $subject = Yii::t('lang', 'Other...');
                 break;
             default :
-                $subject = 'Інше...';
+                $subject = Yii::t('lang', 'Other...');
         }
+        //$test = \yii\helpers\StringHelper::truncateHtml("<html>");
         //$subject = $subject. '-'. Yii::$app->name;
-        $from = 'site-robot@'.preg_replace('#^https?://#', '', Yii::$app->urlManager->getHostInfo());
+        $from = 'site-robot@' . preg_replace('#^https?://#', '', Yii::$app->urlManager->getHostInfo());
         return Yii::$app->mailer
-            ->compose(
+                ->compose(
                     ['html' => 'contactForm-html'],
                     [
                         'ip' => $this->ip,
@@ -111,12 +99,11 @@ class ContactForm extends Model {
                         'email' => $this->email,
                         'body' => safeString($this->body),
                     ]
-            )
-            ->setTo($arrEmail)
-            //->setFrom([$this->email => safeString($this->name)])
-            ->setFrom([$from => 'Site Robot - '.preg_replace('#^https?://#', '', Yii::$app->urlManager->getHostInfo())])
-            ->setSubject(safeString($subject))
-            ->send();
+                )
+                ->setTo($arrEmail)
+                ->setFrom([$from => 'Site Robot - ' . preg_replace('#^https?://#', '', Yii::$app->urlManager->getHostInfo())])
+                ->setSubject($subject)
+                ->send();
     }
 
 }

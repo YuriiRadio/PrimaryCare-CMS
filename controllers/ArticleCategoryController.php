@@ -58,7 +58,7 @@ class ArticleCategoryController extends AppController {
         }
 
         if (empty($article_category)) {
-            throw new \yii\web\HttpException(404, Yii::t('app', 'The requested page does not exist.'));
+            throw new \yii\web\HttpException(404, Yii::t('lang', 'The requested page does not exist.'));
         }
 
         $article_categories = ArticleCategory::find()

@@ -36,7 +36,7 @@ class Sitemap extends ActiveRecord {
 //            ],
 //        ];
 
-        #Головні сторінки (які не змінюються)
+        #Головні сторінки (статичні, незмінні)
         foreach ($arrUrlLanguages as $urlLanguage) {
             $urls[] = [
                 'url' => $host.'/'.$urlLanguage

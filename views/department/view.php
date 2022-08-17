@@ -57,24 +57,24 @@ $this->registerJsFile('https://maps.googleapis.com/maps/api/js?key='.Yii::$app->
 <?php if(!empty(@$model->doctors)): ?>
 <hr />
 <div class="row">
-    <b><p><?= Yii::t('lang', 'Doctors')?>:</p></b>
-
-    <table class="table table-hover">
-        <thead>
-            <th><b>#</b></th>
-            <th><b><?= Yii::t('lang', 'Name') ?></b></th>
-            <th><b><?= Yii::t('lang', 'Specialization') ?>:</b></th>
-            <th><b><?= Yii::t('lang', 'Experience') ?>:</b></th>
-        </thead>
-        <?php $i = 1; foreach (@$model->doctors as $doctor): ?>
-            <tr>
-                <td><b><?= $i ?></b></td>
-                <td><?= Html::a($doctor->name, ['doctor/view', 'id' => $doctor->id]) ?></td>
-                <td><?= @$doctor->specialization->name ?></td>
-                <td><?= @$doctor->experience.Yii::t('lang', 'Y.') ?></td>
-            </tr>
-        <?php $i++; endforeach; ?>
-    </table>
-
+    <div class="col-12">
+        <b><p><?= Yii::t('lang', 'Doctors')?>:</p></b>
+        <table class="table table-hover">
+            <thead>
+                <th><b>#</b></th>
+                <th><b><?= Yii::t('lang', 'Name') ?></b></th>
+                <th><b><?= Yii::t('lang', 'Specialization') ?>:</b></th>
+                <th><b><?= Yii::t('lang', 'Experience') ?>:</b></th>
+            </thead>
+            <?php $i = 1; foreach (@$model->doctors as $doctor): ?>
+                <tr>
+                    <td><b><?= $i ?></b></td>
+                    <td><?= Html::a($doctor->name, ['doctor/view', 'id' => $doctor->id]) ?></td>
+                    <td><?= @$doctor->specialization->name ?></td>
+                    <td><?= @$doctor->experience.Yii::t('lang', 'Y.') ?></td>
+                </tr>
+            <?php $i++; endforeach; ?>
+        </table>
+    </div>
 </div>
 <?php endif; ?>

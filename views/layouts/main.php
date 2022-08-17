@@ -52,7 +52,7 @@ $this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/
             'brandLabel' => Yii::$app->name,
             'brandUrl' => Yii::$app->homeUrl,
             'options' => [
-                'class' => 'navbar navbar-expand-md navbar-dark bg-dark',
+                'class' => 'navbar-expand-md navbar-dark bg-dark',
             ],
         ]);
         echo Nav::widget([
@@ -63,6 +63,7 @@ $this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/
                 //['label' => 'About', 'url' => ['/site/about']],
                 ['label' => '<i class="bi bi-mailbox"></i>&nbsp;' . Yii::t('lang', 'Contact Us'), 'url' => ['/site/contact'], 'encode' => false],
                 ['label' => '<i class="bi bi-map"></i>&nbsp;' . Yii::t('lang', 'Map'), 'url' => ['site/departments-map/'], 'encode' => false],
+                ['label' => '<i class="bi bi-journal-text"></i>&nbsp;' . Yii::t('lang', 'Analyses'), 'url' => ['site/analyses/'], 'encode' => false],
                 Yii::$app->user->isGuest ? (
                     ['label' => '<i class="bi bi-key"></i>&nbsp;' .Yii::t('lang', 'Login'), 'url' => ['/site/login'], 'encode' => false]
                 ) : (
@@ -91,8 +92,9 @@ $this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/
             'items' => [
                 // Пошук - варіант другий
                 Html::beginForm(['/site/search'], 'post', ['class' => 'form-inline'])
-                .Html::input('text', 'search', '', ['placeholder' => Yii::t('lang', 'Search').'... >= 4', 'size' => 7, 'class' => 'form-control'])
+                .Html::input('text', 'search', '', ['placeholder' => Yii::t('lang', 'Search').'... (>=4)', 'size' => 7, 'class' => 'form-control'])
                 .Html::endForm(),
+
                 app\widgets\LanguageWidget::widget(),
             ]
         ]);

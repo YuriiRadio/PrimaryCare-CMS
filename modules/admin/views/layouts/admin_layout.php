@@ -14,6 +14,8 @@ use app\assets\AppAsset;
 
 AppAsset::register($this);
 $this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css', ['depends' => ['yii\bootstrap4\BootstrapAsset']]);
+$this->registerCssFile('https://use.fontawesome.com/releases/v5.3.1/css/all.css', ['depends' => ['yii\bootstrap4\BootstrapAsset']]);
+
 
 ?>
 <?php $this->beginPage() ?>
@@ -66,6 +68,12 @@ $this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/
                         ['label' => '<i class="bi bi-people"></i>&nbsp;' . Yii::t('lang', 'Users'), 'url' => '/admin/user', 'encode' => false],
                         '<div class="dropdown-divider"></div>',
                         ['label' => '<i class="bi bi-briefcase"></i>&nbsp;' . Yii::t('lang', 'Banners'), 'url' => '/admin/banner', 'encode' => false],
+                        '<div class="dropdown-divider"></div>',
+                        ['label' => '<i class="bi bi-people"></i>&nbsp;' . Yii::t('lang', 'Patients'), 'url' => '/admin/patients', 'encode' => false],
+                        ['label' => '<i class="bi bi-journal-text"></i>&nbsp;' . Yii::t('lang', 'Analyses Categories'), 'url' => '/admin/analyses-categories', 'encode' => false],
+                        ['label' => '<i class="bi bi-briefcase"></i>&nbsp;' . Yii::t('lang', 'Analyses'), 'url' => '/admin/analyses', 'encode' => false],
+                        ['label' => '<i class="bi bi-box-seam"></i>&nbsp;' . Yii::t('lang', 'Analyses Packages'), 'url' => '/admin/analyses-packages', 'encode' => false],
+                        ['label' => '<i class="bi bi-journal-text"></i>&nbsp;' . Yii::t('lang', 'Analyses Orders'), 'url' => '/admin/analyses-orders', 'encode' => false],
                         '<div class="dropdown-divider"></div>',
                         ['label' => '<i class="bi bi-gear"></i>&nbsp;' . Yii::t('lang', 'Settings'), 'url' => '/admin/setting', 'encode' => false],
                     ],

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Час створення: Квт 27 2021 р., 10:48
+-- Час створення: Квт 28 2021 р., 10:26
 -- Версія сервера: 5.6.38
 -- Версія PHP: 7.2.0
 
@@ -504,7 +504,7 @@ CREATE TABLE `doctors` (
 INSERT INTO `doctors` (`id`, `status`, `doctor_specialization_id`, `doctor_category_id`, `department_id`, `experience`, `email`, `phone`, `img_src`, `img_src_small`, `schedule`, `number_patients`, `allowed_number_patients`, `views`, `created_at`, `updated_at`) VALUES
 (1, 1, 2, 2, 1, 27, 'mail@gmail.com', '+380999999999', '', '', '8-17', 1180, 900, 2879, 1523470848, 1619507215),
 (2, 1, 2, 2, 2, 37, 'mail@gmail.com', '+380999999999', '', '', '8-17', 627, 450, 1656, 1523716754, 1619507241),
-(3, 1, 2, 2, 9, 28, 'mail@gmail.com', '+380999999999', '', '', '9-18', 1961, 1800, 1470, 1523817856, 1614674008),
+(3, 1, 2, 2, 9, 28, 'mail@gmail.com', '+380999999999', '', '', '9-18', 1961, 1800, 1471, 1523817856, 1614674008),
 (4, 1, 2, 2, 2, 38, 'mail@gmail.com', '+380999999999', '', '', '8-17', 1784, 1800, 1299, 1523818045, 1619507403),
 (5, 1, 1, 4, 2, 5, 'mail@gmail.com', '+380999999999', '', '', '8-17', 956, 900, 1940, 1523818258, 1614674315),
 (6, 0, 2, 2, 2, 23, 'mail@gmail.com', '+380999999999', '', '', '8-17', 1615, 1800, 1554, 1523818491, 1604218729),
@@ -612,34 +612,34 @@ INSERT INTO `doctors_i18n` (`id`, `parent_table_id`, `language`, `name`, `instit
 (48, 24, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 1996, she graduated from the Ivano-Frankivsk National Medical University', '<p><strong>Reception is conducted in 51&nbsp;rooms (second floor)</strong></p>\r\n'),
 (49, 25, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2007 році закінчила Запорізький державний медичний університет', '<p><strong>Прийом ведеться в 20 кабінеті (перший поверх)</strong></p>\r\n\r\n<p><strong>Медсестра:&nbsp;</strong>Литвинчук Людмила Володимирівна</p>\r\n'),
 (50, 25, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2007, she graduated from theZaporozhye State Medical University', '<p><strong>Reception is conducted in 20 rooms (ground floor)</strong></p>\r\n'),
-(51, 26, 'uk-UA', 'Чижевська Руслана Михайлівна', 'У 1992 році Дніпропетровська медична академія', ''),
-(52, 26, 'en-GB', 'Chyzhevska Ruslana Mykhailivna', 'In 1992, she graduated from the Dnipropetrovsk vedikal akademy', ''),
-(53, 27, 'uk-UA', 'Шушунова Олена Володимирівна', 'У 1982 році закінчила Амурська державна медична академія', '<p><strong>Прийом ведеться </strong>в 12 кабінеті (другий поверх)</p>\r\n\r\n<p><strong>Медсестра:</strong> Походзіло Надія Анатоліївна</p>\r\n'),
-(54, 27, 'en-GB', 'Shushunova Olena Volodymyrivna', 'In 1982, she graduated from the Amur State Medical Academy', '<p><strong>Reception is conducted in 12 rooms (second floor)</strong></p>\r\n'),
-(55, 28, 'uk-UA', 'Яновець Людмила Степанівна', 'У 1993 році закінчила Тернопільський державний медичний університет імені І.Я. Горбачевського', '<p><strong>Прийом ведеться в 18 кабінеті (перший поверх)</strong></p>\r\n\r\n<p><strong>Медсестра:&nbsp;</strong>Гребінець Наталія Аркадіївна</p>\r\n'),
-(56, 28, 'en-GB', 'Yanovets Liudmyla Stepanivna', 'In 1993, she graduated from the I. Horbachevsky Ternopil State Medical University', '<p><strong>Reception is in 18 rooms (ground floor)</strong></p>\r\n'),
-(57, 29, 'uk-UA', 'Приндюк Вікторія Андріївна', 'У 2016 році закінчила Національний медичний університет імені О. О. Богомольця', ''),
-(58, 29, 'en-GB', 'Pryndyuk Viktorija Andriivna', 'In 2016, she graduated from theBogomolets National Medical University', ''),
-(59, 30, 'uk-UA', 'Коломейчук Катерина Леонідівна', 'У 2016 році закінчила Національний медичний університет імені О. О. Богомольця', '<p><strong>Медсестра:&nbsp;</strong>Андрощук Ірина Олександрівна</p>\r\n'),
-(60, 30, 'en-GB', 'Kolomeichuk Kateryna Leonidivna', 'In 2016, she graduated from theBogomolets National Medical University', '<p><strong>Nurse:&nbsp;</strong>Androshchuk Iryna Oleksandrivna</p>\r\n'),
-(61, 31, 'uk-UA', 'Скороходов Святослав Віталійович', 'У 2016 році закінчив Вінницький національний медичний університет ім. М.І. Пирогова', ''),
-(62, 31, 'en-GB', 'Skorokhodov Sviatoslav Vitaliiovych', 'In 2016, hi graduated from the National Pirogov Memorial Medical University, Vinnytsya', ''),
-(63, 32, 'uk-UA', 'Євтушок Ольга Вікторівна', 'У 2016 році закінчила Львівський національний медичний університет імені Данила Галицького', '<p><strong>Медсестра:</strong>&nbsp;Яростюк Ольга Юріївна</p>\r\n'),
-(64, 32, 'en-GB', 'Yevtushok Olha Viktorivna', 'In 2016, she graduated from the Lviv National Medical University named after Danylo Halytsky', ''),
-(65, 33, 'uk-UA', 'Марчук Мирослава Романівна', 'У 2016 році закінчила Національний медичний університет імені О. О. Богомольця', ''),
-(66, 33, 'en-GB', 'Marchuk Myroslava Romanivna', 'In 2016, she graduated from theBogomolets National Medical University', ''),
-(69, 35, 'uk-UA', 'Таргоній Наталія Олексіївна', 'У 2009 році закінчила Вінницький національний медичний університет ім. М.І. Пирогова', '<p><strong>Прийом ведеться в 6&nbsp;кабінеті (перший поверх)</strong></p>\r\n\r\n<p><strong>Медсестра:&nbsp;</strong>Тригуба Олена</p>\r\n'),
-(70, 35, 'en-GB', 'Tarhonii Nataliia Oleksiivna', 'In 2009, she graduated from the National Pirogov Memorial Medical University, Vinnytsya', '<p><strong>Reception is conducted in 6&nbsp;rooms (ground floor)</strong></p>\r\n'),
-(71, 36, 'uk-UA', 'Ціпан Ірина Петрівна', 'У 2017 році закінчила Буковинський державний медичний університет', ''),
-(72, 36, 'en-GB', 'Tsipan Iryna Petrivna', 'In 2017, she graduated from the Bukovinian State Medical University.', ''),
-(73, 37, 'uk-UA', 'Коваль Юлія Сергіївна', 'У 2018 році закінчила Національний медичний університет імені О. О. Богомольця', '<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\r\n	<tbody>\r\n		<tr>\r\n			<td>Медсестри:&nbsp;</td>\r\n			<td><strong>Осійчук Юлія Василівна</strong></td>\r\n		</tr>\r\n		<tr>\r\n			<td>&nbsp;</td>\r\n			<td><strong>Захарчук Ольга Петрівна</strong></td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n'),
-(74, 37, 'en-GB', 'Koval Yuliia Serhiivna', 'In 2018, she graduated from theBogomolets National Medical University', '<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\r\n	<tbody>\r\n		<tr>\r\n			<td>Nurses:&nbsp;</td>\r\n			<td><strong>Osiichuk Yuliia Vasylivna</strong></td>\r\n		</tr>\r\n		<tr>\r\n			<td>&nbsp;</td>\r\n			<td><strong>Zakharchuk Olha Petrivna</strong></td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n'),
-(75, 38, 'uk-UA', 'Трофимчук Оксана Павлівна', 'У 2017 році закінчила Івано-Франківський національний медичний університет', '<p><strong>Прийом ведеться в </strong>47 кабінеті (другий поверх)</p>\r\n\r\n<p><strong>Медсестра:</strong>&nbsp;Паламарчук Сніжана Олександрівна</p>\r\n'),
-(76, 38, 'en-GB', 'Trofymchuk Oksana Pavlivna', 'In 2017, she graduated from the Ivano-Frankivsk National Medical University', '<p><strong>Reception is conducted in 47 rooms (second floor)</strong></p>\r\n'),
-(77, 39, 'uk-UA', 'Усач Андрій Володимирович', 'У 2013 році закінчив Національний медичний університет імені О. О. Богомольця', ''),
-(78, 39, 'en-GB', 'Usach Andrii Volodymyrovych', 'In 2013 he graduated from the Bogomolets National Medical University', ''),
-(79, 40, 'uk-UA', 'Єзерська Наталія Василівна', 'У 2009 році закінчила Львівський національний медичний університет імені Данила Галицького', '<p><strong>Прийом ведеться</strong> в 48 кабінеті (другий поверх)</p>\r\n\r\n<p><strong>Медсестра: </strong>Ковпак Ніна Миколаївна</p>\r\n'),
-(80, 40, 'en-GB', 'Yezerska Nataliia Vasylivna', 'In 2009, she graduated from the Lviv National Medical University named after Danylo Halytsky', '<p><strong>Reception is conducted in</strong> 48 rooms (second floor)</p>\r\n\r\n<p><strong>Nurse:</strong> Kovpak Nina Mykolaivna</p>\r\n');
+(51, 26, 'uk-UA', 'Іванова Іванна Іванівна', 'У 1992 році Дніпропетровська медична академія', ''),
+(52, 26, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 1992, she graduated from the Dnipropetrovsk vedikal akademy', ''),
+(53, 27, 'uk-UA', 'Іванова Іванна Іванівна', 'У 1982 році закінчила Амурська державна медична академія', '<p><strong>Прийом ведеться </strong>в 12 кабінеті (другий поверх)</p>\r\n\r\n<p><strong>Медсестра:</strong> Походзіло Надія Анатоліївна</p>\r\n'),
+(54, 27, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 1982, she graduated from the Amur State Medical Academy', '<p><strong>Reception is conducted in 12 rooms (second floor)</strong></p>\r\n'),
+(55, 28, 'uk-UA', 'Іванова Іванна Іванівна', 'У 1993 році закінчила Тернопільський державний медичний університет імені І.Я. Горбачевського', '<p><strong>Прийом ведеться в 18 кабінеті (перший поверх)</strong></p>\r\n\r\n<p><strong>Медсестра:&nbsp;</strong>Гребінець Наталія Аркадіївна</p>\r\n'),
+(56, 28, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 1993, she graduated from the I. Horbachevsky Ternopil State Medical University', '<p><strong>Reception is in 18 rooms (ground floor)</strong></p>\r\n'),
+(57, 29, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2016 році закінчила Національний медичний університет імені О. О. Богомольця', ''),
+(58, 29, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2016, she graduated from theBogomolets National Medical University', ''),
+(59, 30, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2016 році закінчила Національний медичний університет імені О. О. Богомольця', '<p><strong>Медсестра:&nbsp;</strong>Андрощук Ірина Олександрівна</p>\r\n'),
+(60, 30, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2016, she graduated from theBogomolets National Medical University', '<p><strong>Nurse:&nbsp;</strong>Androshchuk Iryna Oleksandrivna</p>\r\n'),
+(61, 31, 'uk-UA', 'Іванов Іван Іванович', 'У 2016 році закінчив Вінницький національний медичний університет ім. М.І. Пирогова', ''),
+(62, 31, 'en-GB', 'Ivanov Ivan Ivanovych', 'In 2016, hi graduated from the National Pirogov Memorial Medical University, Vinnytsya', ''),
+(63, 32, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2016 році закінчила Львівський національний медичний університет імені Данила Галицького', '<p><strong>Медсестра:</strong>&nbsp;Яростюк Ольга Юріївна</p>\r\n'),
+(64, 32, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2016, she graduated from the Lviv National Medical University named after Danylo Halytsky', ''),
+(65, 33, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2016 році закінчила Національний медичний університет імені О. О. Богомольця', ''),
+(66, 33, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2016, she graduated from theBogomolets National Medical University', ''),
+(69, 35, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2009 році закінчила Вінницький національний медичний університет ім. М.І. Пирогова', '<p><strong>Прийом ведеться в 6&nbsp;кабінеті (перший поверх)</strong></p>\r\n\r\n<p><strong>Медсестра:&nbsp;</strong>Тригуба Олена</p>\r\n'),
+(70, 35, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2009, she graduated from the National Pirogov Memorial Medical University, Vinnytsya', '<p><strong>Reception is conducted in 6&nbsp;rooms (ground floor)</strong></p>\r\n'),
+(71, 36, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2017 році закінчила Буковинський державний медичний університет', ''),
+(72, 36, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2017, she graduated from the Bukovinian State Medical University.', ''),
+(73, 37, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2018 році закінчила Національний медичний університет імені О. О. Богомольця', '<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\r\n	<tbody>\r\n		<tr>\r\n			<td>Медсестри:&nbsp;</td>\r\n			<td><strong>Осійчук Юлія Василівна</strong></td>\r\n		</tr>\r\n		<tr>\r\n			<td>&nbsp;</td>\r\n			<td><strong>Захарчук Ольга Петрівна</strong></td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n'),
+(74, 37, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2018, she graduated from theBogomolets National Medical University', '<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\r\n	<tbody>\r\n		<tr>\r\n			<td>Nurses:&nbsp;</td>\r\n			<td><strong>Osiichuk Yuliia Vasylivna</strong></td>\r\n		</tr>\r\n		<tr>\r\n			<td>&nbsp;</td>\r\n			<td><strong>Zakharchuk Olha Petrivna</strong></td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n'),
+(75, 38, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2017 році закінчила Івано-Франківський національний медичний університет', '<p><strong>Прийом ведеться в </strong>47 кабінеті (другий поверх)</p>\r\n\r\n<p><strong>Медсестра:</strong>&nbsp;Паламарчук Сніжана Олександрівна</p>\r\n'),
+(76, 38, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2017, she graduated from the Ivano-Frankivsk National Medical University', '<p><strong>Reception is conducted in 47 rooms (second floor)</strong></p>\r\n'),
+(77, 39, 'uk-UA', 'Іванов Іван Іванович', 'У 2013 році закінчив Національний медичний університет імені О. О. Богомольця', ''),
+(78, 39, 'en-GB', 'Ivanov Ivan Ivanovych', 'In 2013 he graduated from the Bogomolets National Medical University', ''),
+(79, 40, 'uk-UA', 'Іванова Іванна Іванівна', 'У 2009 році закінчила Львівський національний медичний університет імені Данила Галицького', '<p><strong>Прийом ведеться</strong> в 48 кабінеті (другий поверх)</p>\r\n\r\n<p><strong>Медсестра: </strong>Ковпак Ніна Миколаївна</p>\r\n'),
+(80, 40, 'en-GB', 'Ivanova Ivanna Ivanivna', 'In 2009, she graduated from the Lviv National Medical University named after Danylo Halytsky', '<p><strong>Reception is conducted in</strong> 48 rooms (second floor)</p>\r\n\r\n<p><strong>Nurse:</strong> Kovpak Nina Mykolaivna</p>\r\n');
 
 -- --------------------------------------------------------
 

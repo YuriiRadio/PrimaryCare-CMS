@@ -11,7 +11,7 @@ use yii\bootstrap4\LinkPager;
 <?php if (!empty($doctors)): ?>
 <?php $count = count($doctors); $i = 0; foreach ($doctors as $doctor): ?>
 <?php if (($i == 0) || ($i % 3 == 0)): ?><div class="row"><?php endif; ?>
-            <div class="col-sm-4 col-md-4 col-lg-4">
+            <div class="col-12 col-md-4">
                 <div class="card doctor-card wow fadeInUp" data-wow-delay=".<?= $i ?>s">
                     <div class="card-img-top embed-responsive embed-responsive-4by3">
                         <?= Html::img('@web/web/uploads/doctor-fotos/small/'.$doctor->imageSmall, ['alt' => $doctor->name, 'class' => 'embed-responsive-item']) ?>

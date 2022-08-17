@@ -1,4 +1,4 @@
-## Кодування
+# Кодування
 AddDefaultCharset utf-8
 
 Options +FollowSymLinks
@@ -11,6 +11,8 @@ RewriteRule ^css/(.*)$ web/css/$1 [L]
 RewriteRule ^fonts/(.*)$ web/fonts/$1 [L]
 RewriteRule ^js/(.*)$ web/js/$1 [L]
 RewriteRule ^images/(.*)$ web/images/$1 [L]
+RewriteRule ^robots.txt$ web/robots.txt [L]
+# RewriteRule ^ads.txt$ web/ads.txt [L]
 RewriteRule (.*) /web/$1
 
 RewriteCond %{REQUEST_FILENAME} !-f
