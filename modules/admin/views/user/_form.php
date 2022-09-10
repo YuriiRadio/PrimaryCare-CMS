@@ -16,12 +16,13 @@ use yii\bootstrap4\ActiveForm;
     <?= $form->field($model, 'status')->checkbox(['0', '1']) ?>
 
     <?php
-    $model->isNewRecord ? $options = ['options' =>
-        [\app\models\User::ROLE_USER => ['Selected' => true]]] : $options = [];
+    $model->isNewRecord ? $options = ['options' => [\app\models\User::ROLE_USER => ['Selected' => true]]] : $options = [];
 
     echo $form->field($model, 'role')->dropDownList([
         \app\models\User::ROLE_ADMIN => 'Admin',
-        \app\models\User::ROLE_USER => 'User'
+        \app\models\User::ROLE_USER => 'User',
+        \app\models\User::ROLE_DOCTOR => 'Doctor',
+        \app\models\User::ROLE_LABORANT => 'Laborant',
         ], $options);
     ?>
 

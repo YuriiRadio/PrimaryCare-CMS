@@ -13,8 +13,9 @@ use yii\behaviors\TimestampBehavior;
  * @property int $status
  * @property int $doctor_id
  * @property int $patient_id
- * @property string $analyses_packages_ids (varchar(255))
+ * @property string $analyses_packages_nums (varchar(255))
  * @property int $date_biomaterial int(10) (timestamp)
+ * @property int $laborants_ids varchar(255)
  * @property string $analyses_values (text)
  * @property int $views
  * @property int $created_at
@@ -42,10 +43,10 @@ class AnalysesOrders extends ActiveRecord {
         return [
             [['status', 'doctor_id', 'patient_id', 'views', 'created_at', 'updated_at'], 'integer'],
             ['status', 'in', 'range' => [self::STATUS_NEW, self::STATUS_EDITED, self::STATUS_DONE]],
-            [['analyses_packages_ids'], 'string', 'max' => 255],
+            [['analyses_packages_nums', 'laborants_ids'], 'string', 'max' => 255],
             [['analyses_values'], 'string'],
-            [['analyses_packages_ids', 'analyses_values'], 'trim'],
-            [['status', 'doctor_id', 'patient_id', 'analyses_packages_ids'], 'required'],
+            [['analyses_packages_nums', 'analyses_values', 'laborants_ids'], 'trim'],
+            [['status', 'doctor_id', 'patient_id', 'analyses_packages_nums'], 'required'],
             [['views', 'created_at', 'updated_at', 'date_biomaterial'], 'safe'],
             [['doctor_id'], 'exist', 'skipOnError' => true, 'targetClass' => Doctor::className(), 'targetAttribute' => ['doctor_id' => 'id']],
             [['patient_id'], 'exist', 'skipOnError' => true, 'targetClass' => Patients::className(), 'targetAttribute' => ['patient_id' => 'id']],
@@ -102,13 +103,58 @@ class AnalysesOrders extends ActiveRecord {
             'status' => Yii::t('lang', 'Status'),
             'doctor_id' => Yii::t('lang', 'Doctor'),
             'patient_id' => Yii::t('lang', 'Patient'),
-            'analyses_packages_ids' => Yii::t('lang', 'Analyses packages ids'),
+            'analyses_packages_nums' => Yii::t('lang', 'Analyses packages numbers'),
             'date_biomaterial' => Yii::t('lang', 'Date of biomaterial'),
+            'laborants_ids' => Yii::t('lang', 'Laborants ids'),
             'analyses_values' => Yii::t('lang', 'Analyses values'),
             'views' => Yii::t('lang', 'Views'),
             'created_at' => Yii::t('lang', 'Created'),
             'updated_at' => Yii::t('lang', 'Updated'),
         ];
+    }
+
+    public function analysOrderEmail($analyses) {
+
+        $email = $this->patient->email;
+        $subject = Yii::$app->name . ' | '. Yii::t('lang', 'Your laboratory test results') . ', ' . Yii::t('lang', 'Order') . ' #' . $this->id;
+        $host = preg_replace('#^https?://#', '', Yii::$app->urlManager->getHostInfo());
+        $from = 'site-robot@' . $host;
+
+        return Yii::$app->mailer
+            ->compose(
+                ['html' => 'analysOrderEmail-html'],
+                [
+                    'model' => $this,
+                    'analyses' => $analyses,
+                ]
+            )
+            ->setTo($email)
+            ->setFrom([$from => 'Site Robot - ' . $host])
+            ->setSubject($subject)
+            ->send();
+    }
+
+
+    public function orderInvoiceEmail($analyses_packages, $sum) {
+
+        $email = $this->patient->email;
+        $subject = Yii::$app->name . ' | '. Yii::t('lang', 'Your Invoice') . ', ' . Yii::t('lang', 'Order') . ' #' . $this->id;
+        $host = preg_replace('#^https?://#', '', Yii::$app->urlManager->getHostInfo());
+        $from = 'site-robot@' . $host;
+
+        return Yii::$app->mailer
+            ->compose(
+                ['html' => 'orderInvoiceEmaill-html'],
+                [
+                    'model' => $this,
+                    'analyses_packages' => $analyses_packages,
+                    'sum' => $sum
+                ]
+            )
+            ->setTo($email)
+            ->setFrom([$from => 'Site Robot - ' . $host])
+            ->setSubject($subject)
+            ->send();
     }
 
 }

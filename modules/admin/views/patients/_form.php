@@ -30,8 +30,11 @@ use yii\bootstrap4\ActiveForm;
                 ->column());
             ?>
         </div>
-        <div class="col-5">
-<?= $form->field($model, 'declaration_number')->textInput(['maxlength' => true]) ?>
+        <div class="col-2">
+            <?= $form->field($model, 'our_patient')->checkbox(['0', '1']) ?>
+        </div>
+        <div class="col-3">
+            <?= $form->field($model, 'declaration_number')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
 

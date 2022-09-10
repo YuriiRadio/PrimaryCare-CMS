@@ -100,6 +100,7 @@ class SiteController extends AppController {
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
+
         return $this->render('login', [
                     'model' => $model,
         ]);
@@ -182,11 +183,47 @@ class SiteController extends AppController {
      * @return string
      */
     public function actionAnalyses() {
-        if (Yii::$app->request->isAjax) {
-            return 'Ok Analyses!!!';
-        }
 
         $model = new \app\models\AnalysesForm();
+
+        if (Yii::$app->request->isAjax) {
+            $session = Yii::$app->session;
+            if ($session->has('declaration_number')) {
+                $model->scenario = $model::SCENARIO_AJAX;
+                $model->declaration_number = $session->get('declaration_number');
+                if ($model->validate()) {
+                    $order_id = intval(Yii::$app->request->post('order_id'));
+                    $order = $model->loadOrder($order_id);
+
+                    $arr_analyses_packages_nums = array_map(function ($el){ return trim($el); }, explode(',', $order->analyses_packages_nums));
+                    $query_analyses_ids = (new \yii\db\Query())
+                        ->select(["GROUP_CONCAT(`analyses_ids`)"])
+                        ->from(\app\models\AnalysesPackages::tableName())
+                        ->where(['IN', 'pac_num', $arr_analyses_packages_nums])
+                        ->scalar();
+
+                    $arr_analyses_ids = array_map(function ($el){ return intval($el); }, explode(',', $query_analyses_ids));
+                    $analyses = \app\models\Analyses::find()
+                        ->joinWith('category', false, 'LEFT JOIN')
+                        ->select(['analyses.id', 'analyses_categories.title AS cat_title', 'analyses.title', 'analyses.units', 'analyses.norm',])
+                        ->where(['IN', 'analyses.id', $arr_analyses_ids])
+                        ->asArray()->all();
+
+                    // Збільшуємо лічильник переглядів на 1
+                    $order->views = $order->views + 1;
+                    $order->detachBehavior('TimestampBehavior');
+                    $order->save(false);
+
+                    $this->layout = false;
+                    $result = [];
+                    $result['title'] = Yii::t('lang', 'Order') . ' <b>#' . $order->id . '</b> від <b>' . date('d.m.Y', $order->created_at) . '</b>';
+                    $result['content'] = $this->render('orderPrintView', ['order' => $order, 'analyses' => $analyses]);
+                    return json_encode($result);
+                }
+            } else {
+                return 'Fuck Off!!!';
+            }
+        }
 
         // Get cache
         $model_static = Yii::$app->cache->get('systemPage-analyses-' . Yii::$app->language);
@@ -213,13 +250,38 @@ class SiteController extends AppController {
             }
         }
 
+        // Get cache
+        $analyses_packages = Yii::$app->cache->get('systemPage-analyses-packages' . Yii::$app->language);
+        if (!$analyses_packages) {
+            $analyses_packages = \app\models\AnalysesPackages::find()
+            ->select(['id', 'is_free', 'pac_num', 'title', 'analyses_ids', 'cost', 'updated_at'])
+            ->andWhere(['analyses_packages.status' => \app\models\AnalysesPackages::STATUS_ACTIVE])
+            //->orderBy(['pac_num' => SORT_DESC])
+            ->asArray()
+            ->all();
+
+            // Set cache
+            if (!is_null($analyses_packages)) {
+                Yii::$app->cache->set('systemPage-analyses-packages' . Yii::$app->language, $analyses_packages, Yii::$app->setting->get('CACHE.TIME_PAGE'));
+            }
+        }
+
+        $model->scenario = $model::SCENARIO_GET;
+        $orders = null;
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            return $this->refresh();
+            $orders = $model->searchOrders();
+
+            if (!empty($orders)) {
+                $session = Yii::$app->session;
+                $session->set('declaration_number', $model->declaration_number);
+            }
         }
 
         return $this->render('analyses', [
             'model' => $model,
             'model_static' => $model_static,
+            'analyses_packages' => $analyses_packages,
+            'orders' => $orders
         ]);
     }
 

@@ -21,7 +21,7 @@ class PatientsSearch extends Patients
     public function rules()
     {
         return [
-            [['id', 'status', 'doctor_id', 'sex'], 'integer'],
+            [['id', 'status', 'doctor_id', 'our_patient', 'sex'], 'integer'],
             [['declaration_number', 'name', 'address', 'email', 'created_at', 'updated_at', 'doctor'], 'safe'],
             ['birth', 'string', 'max' => 10],
         ];
@@ -68,6 +68,7 @@ class PatientsSearch extends Patients
             'id' => $this->id,
             'status' => $this->status,
             'doctor_id' => $this->doctor_id,
+            'our_patient' => $this->our_patient,
 //            'birth' => $this->birth,
             'sex' => $this->sex,
 //            'created_at' => $this->created_at,

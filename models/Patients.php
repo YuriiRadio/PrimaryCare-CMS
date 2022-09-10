@@ -13,6 +13,7 @@ use app\models\Doctor;
  * @property int $id
  * @property int $status
  * @property int $doctor_id
+ * @property int $our_patient tinyint(1)
  * @property string $declaration_number
  * @property string $name
  * @property string $birth
@@ -45,10 +46,11 @@ class Patients extends ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'doctor_id', 'declaration_number', 'name', 'birth', 'sex'], 'required'],
-            [['status', 'doctor_id', 'sex', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'doctor_id', 'our_patient', 'declaration_number', 'name', 'birth', 'sex'], 'required'],
+            [['status', 'doctor_id', 'our_patient', 'sex', 'created_at', 'updated_at'], 'integer'],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
             ['sex', 'in', 'range' => [self::FEMALE, self::MALE, self::IT]],
+            ['our_patient', 'in', 'range' => [0, 1]],
             ['birth', 'date', 'format' => 'php:Y-m-d'],
             [['name', 'address', 'email'], 'trim'],
             [['declaration_number'], 'string', 'max' => 14],
@@ -66,6 +68,13 @@ class Patients extends ActiveRecord
      */
     public function getDoctor() {
         return $this->hasOne(Doctor::className(), ['id' => 'doctor_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrders() {
+        return $this->hasMany(AnalysesOrders::className(), ['patient_id' => 'id']);
     }
 
     /**
@@ -94,6 +103,7 @@ class Patients extends ActiveRecord
             'id' => Yii::t('lang', 'ID'),
             'status' => Yii::t('lang', 'Status'),
             'doctor_id' => Yii::t('lang', 'Doctor'),
+            'our_patient' => Yii::t('lang', 'Our patient'),
             'declaration_number' => Yii::t('lang', 'Declaration number'),
             'name' => Yii::t('lang', 'Name'),
             'birth' => Yii::t('lang', 'Birth'),

@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\AnalysesOrders */
 
-$this->title = $model->id;
+$this->title = Yii::t('lang', 'Order') . ' #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('lang', 'Analyses Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 //\yii\web\YiiAsset::register($this);
@@ -60,10 +60,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->patient->name,
                 'label' => 'Patient name',
             ],
-//            'analyses_packages_ids',
+//            'analyses_packages_nums',
             [
-                'attribute' => 'analyses_packages_ids',
-                'value' => $model->analyses_packages_ids . '(' . count(explode(',', $model->analyses_packages_ids)) . ')',
+                'attribute' => 'analyses_packages_nums',
+                'value' => $model->analyses_packages_nums . '(' . count(explode(',', $model->analyses_packages_nums)) . ')',
             ],
 //            'date_biomaterial',
             [

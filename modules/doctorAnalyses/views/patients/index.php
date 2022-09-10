@@ -40,6 +40,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'format' => 'html',
             ],
+//            'our_patient',
+            [
+                'attribute' => 'our_patient',
+                'filter' => [0 => Yii::t('lang', 'No'), 1 => Yii::t('lang', 'Yes')],
+                'value' => function ($model) {
+                   return $model->our_patient ? '<span class="text-success">' . Yii::t('lang', 'Yes') . '</span>' : '<span class="text-info">' . Yii::t('lang', 'No') . '</span>';
+                },
+                'format' => 'html',
+            ],
             'name',
 //            'birth',
             [

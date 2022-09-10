@@ -24,6 +24,9 @@ $config = [
             'class' => 'app\modules\admin\Module',
             'layout' => 'admin_layout',
         ],
+    'doctor-analyses' => [
+            'class' => 'app\modules\doctorAnalyses\Module',
+        ],
     ],
     'components' => [
         'request' => [

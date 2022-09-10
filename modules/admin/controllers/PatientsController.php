@@ -42,10 +42,10 @@ class PatientsController extends Controller {
 
     public function actionPatientsList($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = ['results' => ['id' => '', 'text' => '', 'birth' => '']];
+        $out = ['results' => ['id' => '', 'text' => '', 'birth' => '', 'our_patient' => '']];
         if (!is_null($q)) {
             $query = new \yii\db\Query;
-            $query->select('id, name AS text, birth')
+            $query->select('id, name AS text, birth, our_patient')
                     ->from('patients')
                     ->where(['like', 'name', $q])
                     ->limit(20);
@@ -53,7 +53,7 @@ class PatientsController extends Controller {
             $data = $command->queryAll();
             $out['results'] = array_values($data);
         } elseif (intval($id) > 0) {
-            $out['results'] = ['id' => $id, 'text' => Patients::find($id)->name, 'birth' => Patients::find($id)->birth];
+            $out['results'] = ['id' => $id, 'text' => Patients::find($id)->name];
         }
         return $out;
     }

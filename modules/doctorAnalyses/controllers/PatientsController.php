@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\admin\controllers;
+namespace app\modules\doctorAnalyses\controllers;
 
 use Yii;
 use app\models\Patients;
@@ -8,6 +8,7 @@ use app\models\PatientsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\modules\doctorAnalyses\Module;
 
 /**
  * PatientsController implements the CRUD actions for Patients model.
@@ -42,10 +43,10 @@ class PatientsController extends Controller {
 
     public function actionPatientsList($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = ['results' => ['id' => '', 'text' => '', 'birth' => '']];
+        $out = ['results' => ['id' => '', 'text' => '', 'birth' => '', 'our_patient' => '']];
         if (!is_null($q)) {
             $query = new \yii\db\Query;
-            $query->select('id, name AS text, birth')
+            $query->select('id, name AS text, birth, our_patient')
                     ->from('patients')
                     ->where(['like', 'name', $q])
                     ->limit(20);
@@ -53,7 +54,7 @@ class PatientsController extends Controller {
             $data = $command->queryAll();
             $out['results'] = array_values($data);
         } elseif (intval($id) > 0) {
-            $out['results'] = ['id' => $id, 'text' => Patients::find($id)->name, 'birth' => Patients::find($id)->birth];
+            $out['results'] = ['id' => $id, 'text' => Patients::find($id)->name];
         }
         return $out;
     }
@@ -89,15 +90,35 @@ class PatientsController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+//    public function actionCreate() {
+//        $model = new Patients();
+//
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        }
+//
+//        return $this->render('create', [
+//                    'model' => $model,
+//        ]);
+//    }
+
     public function actionCreate() {
         $model = new Patients();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model->doctor_id = Module::$doctor->id;
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            # Захист від підробки лікаря
+            $model->doctor_id = Module::$doctor->id;
+
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -108,8 +129,25 @@ class PatientsController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
+//    public function actionUpdate($id) {
+//        $model = $this->findModel($id);
+//
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        }
+//
+//        return $this->render('update', [
+//                    'model' => $model,
+//        ]);
+//    }
+
     public function actionUpdate($id) {
         $model = $this->findModel($id);
+
+        if ($model->doctor_id != Module::$doctor->id) {
+            Yii::$app->session->setFlash('warning', Yii::t('lang', 'You can only edit your patients.'));
+            return $this->redirect('index');
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -128,8 +166,9 @@ class PatientsController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id) {
-        $this->findModel($id)->delete();
 
+//        $this->findModel($id)->delete();
+        Yii::$app->session->setFlash('warning', Yii::t('lang', 'The ability to delete patients is blocked.'));
         return $this->redirect(['index']);
     }
 

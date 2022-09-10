@@ -117,6 +117,10 @@ div.required label:after {
     color: red;
 }
 
+/*.container-more {
+   max-width: 1300px !important;
+}*/
+
 
 /*.not-set {
     color: #c55;

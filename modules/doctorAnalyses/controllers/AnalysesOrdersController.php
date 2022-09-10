@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\admin\controllers;
+namespace app\modules\doctorAnalyses\controllers;
 
 use Yii;
 use app\models\AnalysesOrders;
@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\AnalysesPackages;
 use app\models\Analyses;
+use app\modules\doctorAnalyses\Module;
 
 /**
  * AnalysesOrdersController implements the CRUD actions for AnalysesOrders model.
@@ -60,15 +61,27 @@ class AnalysesOrdersController extends Controller {
 
         $model = $this->findModel($id);
 
-        # В цьому запиті дістаємо всі $analyses_ids з $analyses_packages
-        $arr_analyses_packages_ids = array_map(function ($el){ return intval($el); }, explode(',', $model->analyses_packages_ids));
-        $query_analyses_ids = (new \yii\db\Query())
-            ->select(["GROUP_CONCAT(`analyses_ids`)"])
-            ->from(AnalysesPackages::tableName())
-            ->where(['IN', 'id', $arr_analyses_packages_ids])
-            ->scalar();
+        $arr_analyses_packages_nums = array_map(function ($el){ return trim($el); }, explode(',', $model->analyses_packages_nums));
+        $analyses_packages = AnalysesPackages::find()
+        ->select(['id', 'is_free', 'pac_num', 'title', 'analyses_ids', 'cost'])
+        ->where(['IN', 'pac_num', $arr_analyses_packages_nums])
+        //->orderBy(['analyses_packages.pac_num' => SORT_DESC])
+        ->asArray()
+        ->all();
 
-        $arr_analyses_ids = array_map(function ($el){ return intval($el); }, explode(',', $query_analyses_ids));
+        $sum = 0.0;
+        $arr_analyses_ids = [];
+        foreach ($analyses_packages as $analys_package) {
+            if (!intval($model->patient->our_patient) || !intval($analys_package['is_free'])) {
+                $sum += floatval($analys_package['cost']);
+            }
+            $arr_analyses_ids = array_merge($arr_analyses_ids, array_map(function ($el){ return intval($el); }, explode(',', $analys_package['analyses_ids'])));
+        }
+
+        if (Yii::$app->request->isAjax) {
+           return $model->orderInvoiceEmail($analyses_packages, $sum) ? 1 : 0;
+        }
+
         $analyses = Analyses::find()
         ->joinWith('category', false, 'LEFT JOIN')
 //      ->join('LEFT JOIN', AnalysesCategories::tableName(), '`analyses`.`analyses_categories_id` = `analyses_categories`.`id`')
@@ -79,14 +92,21 @@ class AnalysesOrdersController extends Controller {
             'analyses.norm',
         ])
 //      ->orderBy('analyses.analyses_categories_id')
-        ->andWhere(['analyses.status' => Analyses::STATUS_ACTIVE])
+        ->where(['analyses.status' => Analyses::STATUS_ACTIVE])
         ->andWhere(['IN', 'analyses.id', $arr_analyses_ids])
         ->asArray()
         ->all();
 
-        return $this->render('view', [
+        // Збільшуємо лічильник переглядів на 1
+        $model->views = $model->views + 1;
+        $model->detachBehavior('TimestampBehavior');
+        $model->save(false);
+
+        return $this->render('print_view', [
             'model' => $model,
-            'analyses' => $analyses,
+            'analyses_packages' => $analyses_packages,
+            'sum' => $sum,
+            'analyses' => $analyses
         ]);
     }
 
@@ -112,26 +132,27 @@ class AnalysesOrdersController extends Controller {
     public function actionCreate() {
         $model = new AnalysesOrders();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model->doctor_id = Module::$doctor->id;
+        $model->status = $model::STATUS_NEW;
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            # Захист від підробки лікаря, статусу
+            $model->doctor_id = Module::$doctor->id;
+            $model->status = $model::STATUS_NEW;
+
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
         }
 
         $analyses_packages = AnalysesPackages::find()
-//                ->joinWith('category', false, 'LEFT JOIN')
-//                ->join('LEFT JOIN', AnalysesCategories::tableName(), '`analyses`.`analyses_categories_id` = `analyses_categories`.`id`')
-                ->select(['analyses_packages.id',
-                    'analyses_packages.is_free',
-                    'analyses_packages.pac_num',
-                    'analyses_packages.title',
-                    'analyses_packages.analyses_ids',
-                    'analyses_packages.cost',
-                    'analyses_packages.updated_at',
-                ])
-                ->andWhere(['analyses_packages.status' => AnalysesPackages::STATUS_ACTIVE])
-//                ->orderBy(['analyses_packages.pac_num' => SORT_DESC])
-                ->asArray()
-                ->all();
-
+            ->select(['id', 'is_free', 'pac_num', 'title', 'analyses_ids', 'cost', 'updated_at'])
+            ->andWhere(['analyses_packages.status' => AnalysesPackages::STATUS_ACTIVE])
+    //                ->orderBy(['pac_num' => SORT_DESC])
+            ->asArray()
+            ->all();
 
         $model->date_biomaterial = date('Y-m-d', time());
 
@@ -164,41 +185,30 @@ class AnalysesOrdersController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        # Якщо $model->analyses_packages_ids буде редаговано - очистимо $analyses_values
-        $old_analyses_packages_ids = $model->analyses_packages_ids;
+        if ($model->doctor_id != Module::$doctor->id) {
+            Yii::$app->session->setFlash('warning', Yii::t('lang', 'You can update only your orders.'));
+            return $this->redirect(['index']);
+        }
 
-        if ($model->load(Yii::$app->request->post())) {
-
-            # Якщо $model->analyses_packages_ids буде редаговано - очистимо $analyses_values
-            if ($model->analyses_packages_ids != $old_analyses_packages_ids) {
-                $model->analyses_values = '';
-            }
-
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($model->status == $model::STATUS_DONE) {
+            Yii::$app->session->setFlash('warning', Yii::t('lang', 'With the status - done, editing is not possible.'));
+            return $this->redirect(['index']);
         }
 
         $analyses_packages = AnalysesPackages::find()
-        ->select(['analyses_packages.id',
-            'analyses_packages.is_free',
-            'analyses_packages.pac_num',
-            'analyses_packages.title',
-            'analyses_packages.analyses_ids',
-            'analyses_packages.cost',
-            'analyses_packages.updated_at',
-        ])
-        ->andWhere(['analyses_packages.status' => AnalysesPackages::STATUS_ACTIVE])
+        ->select(['id', 'is_free', 'pac_num', 'title', 'analyses_ids', 'cost', 'updated_at'])
+        ->where(['status' => AnalysesPackages::STATUS_ACTIVE])
 //      ->orderBy(['analyses_packages.pac_num' => SORT_DESC])
         ->asArray()
         ->all();
 
         # В цьому запиті дістаємо всі $analyses_ids з $analyses_packages
-        $arr_analyses_packages_ids = array_map(function ($el){ return intval($el); }, explode(',', $model->analyses_packages_ids));
+        //$arr_analyses_packages_ids = array_map(function ($el){ return intval($el); }, explode(',', $model->analyses_packages_ids));
+        $arr_analyses_packages_nums = array_map(function ($el){ return trim($el); }, explode(',', $model->analyses_packages_nums));
         $query_analyses_ids = (new \yii\db\Query())
             ->select(["GROUP_CONCAT(`analyses_ids`)"])
             ->from(AnalysesPackages::tableName())
-            ->where(['IN', 'id', $arr_analyses_packages_ids])
+            ->where(['IN', 'pac_num', $arr_analyses_packages_nums])
             ->scalar();
 
         $arr_analyses_ids = array_map(function ($el){ return intval($el); }, explode(',', $query_analyses_ids));
@@ -212,10 +222,49 @@ class AnalysesOrdersController extends Controller {
             'analyses.norm',
         ])
 //      ->orderBy('analyses.analyses_categories_id')
-        ->andWhere(['analyses.status' => Analyses::STATUS_ACTIVE])
+        ->where(['analyses.status' => Analyses::STATUS_ACTIVE])
         ->andWhere(['IN', 'analyses.id', $arr_analyses_ids])
         ->asArray()
         ->all();
+
+        # Якщо $model->analyses_packages_nums буде редаговано - очистимо $analyses_values
+        $old_analyses_packages_nums = $model->analyses_packages_nums;
+        $old_status = $model->status;
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            # Якщо $model->analyses_values не пустий - оновити status на STATUS_EDITED
+            if (!empty($model->analyses_values)) {
+                $model->status = $model::STATUS_EDITED;
+
+                # Якщо введені всі значення аналізу встановлюємо STATUS_DONE
+                if (count($arr_analyses_ids) === count(json_decode($model->analyses_values, 1))) {
+                    $model->status = $model::STATUS_DONE;
+                }
+            }
+
+            # Якщо $model->analyses_packages_nums буде редаговано зі статусом EDITED - не зберігаємо модель і виводимо повідомлення
+            if ($old_status == $model::STATUS_EDITED && $model->analyses_packages_nums != $old_analyses_packages_nums) {
+                Yii::$app->session->setFlash('warning', Yii::t('lang', 'With the status - edited, it is impossible to change packages.'));
+                return $this->refresh();
+            }
+
+            # Якщо $model->analyses_packages_nums буде редаговано (тільки зі статусом NEW) - очистимо $analyses_values
+            if ($old_status == $model::STATUS_NEW && $model->analyses_packages_nums != $old_analyses_packages_nums) {
+                $model->analyses_values = '';
+            }
+
+            if ($model->save()) {
+                if ($model->status === $model::STATUS_DONE) {
+                    if ($model->analysOrderEmail($analyses)) {
+                        Yii::$app->session->setFlash('success', Yii::t('lang', 'Email with the result has been sent to the patient.'));
+                    } else {
+                        Yii::$app->session->setFlash('warning', Yii::t('lang', 'The result email was not sent to the patient.'));
+                    }
+                }
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        }
 
         $model->date_biomaterial = date('Y-m-d', $model->date_biomaterial);
 
@@ -233,9 +282,27 @@ class AnalysesOrdersController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id) {
-        $this->findModel($id)->delete();
+//    public function actionDelete($id) {
+//        $this->findModel($id)->delete();
+//
+//        return $this->redirect(['index']);
+//    }
 
+    public function actionDelete($id) {
+
+        $model = $this->findModel($id);
+
+        if ($model->doctor_id != Module::$doctor->id) {
+            Yii::$app->session->setFlash('error', Yii::t('lang', 'You can delete only your orders.'));
+            return $this->redirect(['index']);
+        }
+
+        if ($model->status == $model::STATUS_EDITED || $model->status == $model::STATUS_DONE) {
+            Yii::$app->session->setFlash('error', Yii::t('lang', 'With the status - edited or done, deletion is impossible.'));
+            return $this->redirect(['index']);
+        }
+
+        $model->delete();
         return $this->redirect(['index']);
     }
 

@@ -1,92 +1,81 @@
 <?php
-
 use yii\helpers\Html;
-use yii\widgets\DetailView;
-
-/* @var $this yii\web\View */
-/* @var $model app\models\AnalysesOrders */
-
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('lang', 'Analyses Orders'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-//\yii\web\YiiAsset::register($this);
 
 ?>
-<div class="analyses-orders-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<script>
+
+</script>
+
+<div class="analys-order-view">
 
     <p>
-        <?= Html::a(Yii::t('lang', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('lang', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('lang', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?= Html::a('<i class="bi bi-printer-fill"></i>&nbsp;' . Yii::t('lang', 'Print Result'), null, ['class' => 'btn btn-info', 'onclick' => 'PrintElem(\'#print-analys-content\')']) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            [
-                'attribute' => 'status',
-//                'value' => $model->status ? '<span class="text-success">' . Yii::t('lang', 'Active') . '</span>' : '<span class="text-danger">' . Yii::t('lang', 'Inactive') . '</span>',
-                'value' => function ($model) {
-                        switch ($model->status) {
-                        case 0:
-                            return '<span class="text-primary">' . Yii::t('lang', 'New') . '</span>';
-                            break;
-                        case 1:
-                            return '<span class="text-warning">' . Yii::t('lang', 'Edited') . '</span>';
-                            break;
-                        case 2:
-                            return '<span class="text-success">' . Yii::t('lang', 'Done') . '</span>';
-                            break;
-                    }
-                },
-                'format' => 'html'
-            ],
-//            'doctor_id',
-            [
-                'attribute' => 'doctor_id',
-                'value' => $model->doctor->name,
-                'label' => 'Doctor name',
-            ],
-            [
-                'attribute' => 'patient_id',
-                'value' => $model->patient->name,
-                'label' => 'Patient name',
-            ],
-//            'analyses_packages_ids',
-            [
-                'attribute' => 'analyses_packages_ids',
-                'value' => $model->analyses_packages_ids . '(' . count(explode(',', $model->analyses_packages_ids)) . ')',
-            ],
-//            'date_biomaterial',
-            [
-                'attribute' => 'date_biomaterial',
-                'format' => ['date', 'php:d.m.Y']
-            ],
-            'views',
-            [
-                'attribute' => 'analyses_values',
-                'value' => $this->render('order_values', ['model' => $model, 'analyses' => $analyses]),
-                'format' => 'raw'
-            ],
-            //'created_at',
-            [
-                'attribute' => 'created_at',
-                'format' => ['date', 'php:d.m.Y']
-            ],
-            //'updated_at',
-            [
-                'attribute' => 'updated_at',
-                'format' => ['date', 'php:d.m.Y']
-            ],
-        ],
-    ]) ?>
+    <div id="print-analys-content">
+        <table class="table table-hover" <?= $order->status === 0 ? 'style="background: #FF9200"' : 'style="background: #00cc66"' ?>>
+            <tbody>
+                <tr>
+                    <td style="font-size: 12px">Ліцензія&nbsp;на медичну практику:<br />
+                    <b>1265</b> від <b>05.07.2018</b></td>
+                    <td colspan="2">
+                    <p style="text-align: center"><b>КНП &quot;БЕРЕЗНІВСЬКИЙ ЦЕНТР ПМД&quot;</b></p>
+
+                    <p><em>34600, Рівненська обл., Рівненський район, місто Березне, вул. Набережна, будинок 3</em></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?= Yii::t('lang', 'Order') ?>:<b><?= ' #' . $order->id ?></b> від&nbsp;<b><?= date('d.m.Y', $order->created_at) ?></b></td>
+                    <td colspan="2"><?= Yii::t('lang', 'Patient') ?>:&nbsp;<b><?= $order->patient->name ?></b></td>
+                </tr>
+                <tr>
+                    <td><?= Yii::t('lang', 'Date of biomaterial') ?>:&nbsp;<b><?= date('d.m.Y', $order->date_biomaterial) ?></b></td>
+                    <td><?= Yii::t('lang', 'Birth') ?>:&nbsp;<b><?= date('d.m.Y', strtotime($order->patient->birth)) . ' (' . substr(date('Ymd') - date('Ymd', strtotime($order->patient->birth)), 0, -4) . ')' ?></b></td>
+                    <td><?= Yii::t('lang', 'Sex') ?>:&nbsp;<b>
+                        <?php
+                            if ($order->patient->sex == 1) { echo Yii::t('lang', 'Male'); }
+                            elseif ($order->patient->sex == 0) { echo Yii::t('lang', 'Female'); }
+                            elseif ($order->patient->sex == 2) { echo Yii::t('lang', 'It'); }
+                        ?>
+                        </b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><?= Yii::t('lang', 'Doctor') ?>:&nbsp;<b><?= $order->doctor->name ?></b></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><?= Yii::t('lang', 'Laborant(s)') ?>:&nbsp;<b>Іванова Іванна Іванівна</b></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <?php if (!empty($order->analyses_values)): ?>
+                <table class="table table-hover" <?= $order->status === $order::STATUS_NEW || $order->status === $order::STATUS_EDITED ? 'style="background: #FF9200"' : 'style="background: #00cc66"' ?>>
+                    <thead>
+                        <th><b>#</b></th>
+                        <th><b><?= Yii::t('lang', 'Title') ?></b></th>
+                        <th><b><?= Yii::t('lang', 'Value') ?></b></th>
+                        <th><b><?= Yii::t('lang', 'Units') ?></b></th>
+                        <th><b><?= Yii::t('lang', 'Normal') ?></b></th>
+                    </thead>
+                        <?php $i = 1; $old_cat_title = ''; foreach ($analyses as $analys): ?>
+                            <?php if ($old_cat_title != $analys['cat_title']): ?>
+                                <tr>
+                                    <td colspan="5" style="text-align: center"><b><?= $analys['cat_title'] ?></b></td>
+                                </tr>
+                            <?php endif; ?>
+                            <tr>
+                                <td><b><?= $i ?></b></td>
+                                <td><?= $analys['title'] ?></td>
+                                <td style="font-size: 25px;"><b><?= json_decode($order->analyses_values, true)[$analys['id']] ?></b></td>
+                                <td><?= $analys['units'] ?></td>
+                                <td><?= nl2br($analys['norm']) ?></td>
+                            </tr>
+                        <?php $i++; $old_cat_title = $analys['cat_title']; endforeach; ?>
+                </table>
+        <?php endif; ?>
+        <p>Інтерпретація результатів дослідженнь проводиться лише лікарем. Діагноз не може бути встановлений тільки на підставі результатів лабораторних досліджень, також потрібні огляд пацієнта та, можливо, додаткові обстеження.</p>
+    </div>
 
 </div>

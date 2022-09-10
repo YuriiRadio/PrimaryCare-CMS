@@ -25,7 +25,7 @@ class AutoRunComponent extends Component {
 //            $this->on(yii\base\Application::EVENT_BEFORE_REQUEST,
 //                Yii::$app->name = Yii::$app->setting->get('APP_NAME')
 //            );
-
+//
 //            Yii::$app->name = Yii::$app->setting->get('APP_NAME'); #Перенесено в class BootstrapComponent implements BootstrapInterface
 
     }

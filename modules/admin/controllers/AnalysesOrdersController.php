@@ -61,11 +61,12 @@ class AnalysesOrdersController extends Controller {
         $model = $this->findModel($id);
 
         # В цьому запиті дістаємо всі $analyses_ids з $analyses_packages
-        $arr_analyses_packages_ids = array_map(function ($el){ return intval($el); }, explode(',', $model->analyses_packages_ids));
+        //$arr_analyses_packages_ids = array_map(function ($el){ return intval($el); }, explode(',', $model->analyses_packages_ids));
+        $arr_analyses_packages_nums = array_map(function ($el){ return trim($el); }, explode(',', $model->analyses_packages_nums));
         $query_analyses_ids = (new \yii\db\Query())
             ->select(["GROUP_CONCAT(`analyses_ids`)"])
             ->from(AnalysesPackages::tableName())
-            ->where(['IN', 'id', $arr_analyses_packages_ids])
+            ->where(['IN', 'pac_num', $arr_analyses_packages_nums])
             ->scalar();
 
         $arr_analyses_ids = array_map(function ($el){ return intval($el); }, explode(',', $query_analyses_ids));
@@ -79,7 +80,7 @@ class AnalysesOrdersController extends Controller {
             'analyses.norm',
         ])
 //      ->orderBy('analyses.analyses_categories_id')
-        ->andWhere(['analyses.status' => Analyses::STATUS_ACTIVE])
+        ->where(['analyses.status' => Analyses::STATUS_ACTIVE])
         ->andWhere(['IN', 'analyses.id', $arr_analyses_ids])
         ->asArray()
         ->all();
@@ -112,26 +113,19 @@ class AnalysesOrdersController extends Controller {
     public function actionCreate() {
         $model = new AnalysesOrders();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($model->save()) {
+               return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         $analyses_packages = AnalysesPackages::find()
-//                ->joinWith('category', false, 'LEFT JOIN')
-//                ->join('LEFT JOIN', AnalysesCategories::tableName(), '`analyses`.`analyses_categories_id` = `analyses_categories`.`id`')
-                ->select(['analyses_packages.id',
-                    'analyses_packages.is_free',
-                    'analyses_packages.pac_num',
-                    'analyses_packages.title',
-                    'analyses_packages.analyses_ids',
-                    'analyses_packages.cost',
-                    'analyses_packages.updated_at',
-                ])
-                ->andWhere(['analyses_packages.status' => AnalysesPackages::STATUS_ACTIVE])
+                ->select(['id', 'is_free', 'pac_num', 'title', 'analyses_ids', 'cost', 'updated_at'])
+                ->where(['status' => AnalysesPackages::STATUS_ACTIVE])
 //                ->orderBy(['analyses_packages.pac_num' => SORT_DESC])
                 ->asArray()
                 ->all();
-
 
         $model->date_biomaterial = date('Y-m-d', time());
 
@@ -164,13 +158,13 @@ class AnalysesOrdersController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        # Якщо $model->analyses_packages_ids буде редаговано - очистимо $analyses_values
-        $old_analyses_packages_ids = $model->analyses_packages_ids;
+        # Якщо $model->analyses_packages_nums буде редаговано - очистимо $analyses_values
+        $old_analyses_packages_nums = $model->analyses_packages_nums;
 
         if ($model->load(Yii::$app->request->post())) {
 
-            # Якщо $model->analyses_packages_ids буде редаговано - очистимо $analyses_values
-            if ($model->analyses_packages_ids != $old_analyses_packages_ids) {
+            # Якщо $model->analyses_packages_nums буде редаговано - очистимо $analyses_values
+            if ($model->analyses_packages_nums != $old_analyses_packages_nums) {
                 $model->analyses_values = '';
             }
 
@@ -180,25 +174,19 @@ class AnalysesOrdersController extends Controller {
         }
 
         $analyses_packages = AnalysesPackages::find()
-        ->select(['analyses_packages.id',
-            'analyses_packages.is_free',
-            'analyses_packages.pac_num',
-            'analyses_packages.title',
-            'analyses_packages.analyses_ids',
-            'analyses_packages.cost',
-            'analyses_packages.updated_at',
-        ])
-        ->andWhere(['analyses_packages.status' => AnalysesPackages::STATUS_ACTIVE])
+        ->select(['id', 'is_free', 'pac_num', 'title', 'analyses_ids', 'cost', 'updated_at'])
+        ->where(['status' => AnalysesPackages::STATUS_ACTIVE])
 //      ->orderBy(['analyses_packages.pac_num' => SORT_DESC])
         ->asArray()
         ->all();
 
         # В цьому запиті дістаємо всі $analyses_ids з $analyses_packages
-        $arr_analyses_packages_ids = array_map(function ($el){ return intval($el); }, explode(',', $model->analyses_packages_ids));
+        //$arr_analyses_packages_ids = array_map(function ($el){ return intval($el); }, explode(',', $model->analyses_packages_ids));
+        $arr_analyses_packages_nums = array_map(function ($el){ return trim($el); }, explode(',', $model->analyses_packages_nums));
         $query_analyses_ids = (new \yii\db\Query())
             ->select(["GROUP_CONCAT(`analyses_ids`)"])
             ->from(AnalysesPackages::tableName())
-            ->where(['IN', 'id', $arr_analyses_packages_ids])
+            ->where(['IN', 'pac_num', $arr_analyses_packages_nums])
             ->scalar();
 
         $arr_analyses_ids = array_map(function ($el){ return intval($el); }, explode(',', $query_analyses_ids));
@@ -212,7 +200,7 @@ class AnalysesOrdersController extends Controller {
             'analyses.norm',
         ])
 //      ->orderBy('analyses.analyses_categories_id')
-        ->andWhere(['analyses.status' => Analyses::STATUS_ACTIVE])
+        ->where(['analyses.status' => Analyses::STATUS_ACTIVE])
         ->andWhere(['IN', 'analyses.id', $arr_analyses_ids])
         ->asArray()
         ->all();

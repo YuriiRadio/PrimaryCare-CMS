@@ -29,10 +29,12 @@ class User extends ActiveRecord implements IdentityInterface {
 
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
-    const ROLE_GUEST = 3;
+    const ROLE_DOCTOR = 3;
+    const ROLE_LABORANT = 4;
+    const ROLE_GUEST = 5;
 
-     public $password;
-     public $new_password;
+    public $password;
+    public $new_password;
 
 
     /**
@@ -62,7 +64,7 @@ class User extends ActiveRecord implements IdentityInterface {
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
 
             ['role', 'default', 'value' => self::ROLE_USER],
-            ['role', 'in', 'range' => [self::ROLE_ADMIN, self::ROLE_USER, self::ROLE_GUEST]],
+            ['role', 'in', 'range' => [self::ROLE_ADMIN, self::ROLE_USER, self::ROLE_DOCTOR, self::ROLE_LABORANT, self::ROLE_GUEST]],
 
             [['username', 'password_hash'], 'required'],
             //[['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
@@ -203,30 +205,44 @@ class User extends ActiveRecord implements IdentityInterface {
 
     /**
      * Generates "remember me" authentication key
-     */
+    */
     public function generateAuthKey() {
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
     /**
      * Generates new password reset token
-     */
+    */
     public function generatePasswordResetToken() {
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
      * Removes password reset token
-     */
+    */
     public function removePasswordResetToken() {
         $this->password_reset_token = null;
     }
 
     /**
-     * Removes password reset token
-     */
+     * Сheck is Admin
+    */
     public function isAdmin() {
         return $this->role == self::ROLE_ADMIN ? true : false;
+    }
+
+    /**
+     * Сheck is Doctor
+    */
+    public function isDoctor() {
+        return $this->role == self::ROLE_DOCTOR ? true : false;
+    }
+
+    /**
+     * Сheck is Laborant
+    */
+    public function isLaborant() {
+        return $this->role == self::ROLE_LABORANT ? true : false;
     }
 
 }
