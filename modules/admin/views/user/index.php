@@ -47,12 +47,21 @@ $this->params['breadcrumbs'][] = $this->title;
             //'role',
             [
                 'attribute' => 'role',
-                'filter'=> [1 => Yii::t('lang', 'Admin'), 2 => Yii::t('lang', 'User')],
+                'filter'=> [
+                        \app\models\User::ROLE_ADMIN => Yii::t('lang', 'Admin'),
+                        \app\models\User::ROLE_USER => Yii::t('lang', 'User'),
+                        \app\models\User::ROLE_DOCTOR => Yii::t('lang', 'Doctor'),
+                        \app\models\User::ROLE_LABORANT => Yii::t('lang', 'Laborant')
+                    ],
                 'value' => function ($model) {
-                    if ($model->role == 1) {
+                    if ($model->role == $model::ROLE_ADMIN) {
                         return '<span class="text-danger">'.Yii::t('lang', 'Admin').'</span>';
-                    } elseif ($model->role == 2) {
-                        return '<span class="text-success">'.Yii::t('lang', 'User').'</span>';
+                    } elseif ($model->role == $model::ROLE_USER) {
+                        return '<span class="text-dark">'.Yii::t('lang', 'User').'</span>';
+                    } elseif ($model->role == $model::ROLE_DOCTOR) {
+                        return '<span class="text-success">'.Yii::t('lang', 'Doctor').'</span>';
+                    } elseif ($model->role == $model::ROLE_LABORANT) {
+                        return '<span class="text-info">'.Yii::t('lang', 'Laborant').'</span>';
                     }
                 },
                 'format' => 'html',

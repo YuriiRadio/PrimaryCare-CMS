@@ -60,7 +60,18 @@ table td, table th {
                 <td colspan="3"><?= Yii::t('lang', 'Doctor') ?>:&nbsp;<b><?= $model->doctor->name ?></b></td>
             </tr>
             <tr>
-                <td colspan="3"><?= Yii::t('lang', 'Laborant(s)') ?>:&nbsp;<b>Іванова Іванна Іванівна</b></td>
+                <td colspan="3"><?= Yii::t('lang', 'Laborant(s)') ?>:&nbsp;
+                    <b>
+                    <?php
+                    if(is_null($model->laborants())) {
+                        echo Yii::t('lang', 'Created by the Doctor!!!');
+                    } else {
+                        $first = true; foreach ($model->laborants() as $laborant) {
+                            echo $first ? $laborant['name'] : ', ' . $laborant['name']; $first = false;
+                        }
+                    } ?>
+                    </b>
+                </td>
             </tr>
         </tbody>
     </table>

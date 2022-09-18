@@ -40,9 +40,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 type: 'POST',
                 success: function(response) {
                     let response_obj = JSON.parse(response);
-                    $('#analys-modal .modal-header > h5').html(response_obj.title);
-                    $('#analys-modal .modal-body').html(response_obj.content);
-                    $('#analys-modal').modal();
+//                    $('#analys-modal .modal-header > h5').html(response_obj.title);
+//                    $('#analys-modal .modal-body').html(response_obj.content);
+//                    $('#analys-modal').modal();
+                    let analys_modal = $('#analys-modal');
+                    analys_modal.children().children().children('.modal-header').children('h5').html(response_obj.title);
+                    analys_modal.children().children().children('.modal-body').html(response_obj.content);
+                    analys_modal.modal();
                 },
                 error: function() {
                     window.alert('Error analys-view!!!');
@@ -58,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
         function Popup(data) {
             let mywindow = window.open('', 'Print content', 'height=600,width=800');
             mywindow.document.write('<html><head><title>Print content</title>');
-            mywindow.document.write('<link rel="stylesheet" href="/css/bootstrap_united.min.css" type="text/css" />');
+            mywindow.document.write('<link rel="stylesheet" href="<?= Yii::$app->urlManager->getHostInfo() ?>/css/bootstrap_united.min.css" type="text/css" />');
             mywindow.document.write('</head><body>');
             mywindow.document.write(data);
             mywindow.document.write('</body></html>');

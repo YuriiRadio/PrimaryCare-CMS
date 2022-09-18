@@ -16,7 +16,7 @@
                             <td><?= $analys['cat_title'] ?></td>
                             <td><?= $analys['id'] ?></td>
                             <td><?= $analys['title'] ?></td>
-                            <td><?= isset(json_decode($model->analyses_values, true)[$analys['id']]) ? json_decode($model->analyses_values, true)[$analys['id']] : '' ?></td>
+                            <td><?= json_decode($model->analyses_values, true)[$analys['id']] ?></td>
                             <td><?= $analys['units'] ?></td>
                             <td><?= nl2br($analys['norm']) ?></td>
                         </tr>

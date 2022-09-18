@@ -19,7 +19,7 @@ elseif ($model->status === 2) { $status = '<span class="text-success">' . Yii::t
 ?>
 
 <?php
-    $url = \yii\helpers\Url::to(['/doctor-analyses/analyses-orders/view', 'id' => $model->id]);
+    $url = \yii\helpers\Url::to(['/laborant-analyses/analyses-orders/view', 'id' => $model->id]);
     $js = <<<JS
     $('#sendInvoiceEmail').on('click', function () {
     $.ajax({
@@ -134,7 +134,7 @@ $this->registerJs($js);
                     </tr>
                     <tr>
                         <td><b>Сума:</b></td>
-                        <td colspan="2"><b><?= $sum . ' грн.' ?></b></td>
+                        <td colspan="2"><b><?php echo number_format($sum, 2, ',', '') . ' грн.'; ?></b></td>
                     </tr>
                 </table>
                 <table class="table table-hover" style="background: #ECAA1B">

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\doctorAnalyses\controllers;
+namespace app\modules\laborantAnalyses\controllers;
 
 use Yii;
 use app\models\AnalysesOrders;
@@ -10,7 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\AnalysesPackages;
 use app\models\Analyses;
-use app\modules\doctorAnalyses\Module;
+use app\modules\laborantAnalyses\Module;
+use app\models\Patients;
 
 /**
  * AnalysesOrdersController implements the CRUD actions for AnalysesOrders model.
@@ -29,6 +30,24 @@ class AnalysesOrdersController extends Controller {
                 ],
             ],
         ];
+    }
+
+    public function actionPatientsList($q = null, $id = null) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '', 'birth' => '', 'our_patient' => '']];
+        if (!is_null($q)) {
+            $query = new \yii\db\Query;
+            $query->select('id, name AS text, birth, our_patient')
+                    ->from('patients')
+                    ->where(['like', 'name', $q])
+                    ->limit(20);
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        } elseif (intval($id) > 0) {
+            $out['results'] = ['id' => $id, 'text' => Patients::find($id)->name];
+        }
+        return $out;
     }
 
     /**
@@ -132,36 +151,40 @@ class AnalysesOrdersController extends Controller {
 //    }
 
     public function actionCreate() {
-        $model = new AnalysesOrders();
 
-        $model->doctor_id = Module::$doctor->id;
-        $model->status = $model::STATUS_NEW;
+        Yii::$app->session->setFlash('error', Yii::t('lang', 'You are not allowed to create orders.'));
+        return $this->redirect(['index']);
 
-        if ($model->load(Yii::$app->request->post())) {
-
-            # Захист від підробки лікаря, статусу
-            $model->doctor_id = Module::$doctor->id;
-            $model->status = $model::STATUS_NEW;
-
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-
-        }
-
-        $analyses_packages = AnalysesPackages::find()
-            ->select(['id', 'is_free', 'pac_num', 'title', 'analyses_ids', 'cost', 'updated_at'])
-            ->andWhere(['analyses_packages.status' => AnalysesPackages::STATUS_ACTIVE])
-    //                ->orderBy(['pac_num' => SORT_DESC])
-            ->asArray()
-            ->all();
-
-        $model->date_biomaterial = date('Y-m-d', time());
-
-        return $this->render('create', [
-                    'model' => $model,
-                    'analyses_packages' => $analyses_packages
-        ]);
+//        $model = new AnalysesOrders();
+//
+//        $model->doctor_id = Module::$doctor->id;
+//        $model->status = $model::STATUS_NEW;
+//
+//        if ($model->load(Yii::$app->request->post())) {
+//
+//            # Захист від підробки лікаря, статусу
+//            $model->doctor_id = Module::$doctor->id;
+//            $model->status = $model::STATUS_NEW;
+//
+//            if ($model->save()) {
+//                return $this->redirect(['view', 'id' => $model->id]);
+//            }
+//
+//        }
+//
+//        $analyses_packages = AnalysesPackages::find()
+//            ->select(['id', 'is_free', 'pac_num', 'title', 'analyses_ids', 'cost', 'updated_at'])
+//            ->andWhere(['analyses_packages.status' => AnalysesPackages::STATUS_ACTIVE])
+//    //                ->orderBy(['pac_num' => SORT_DESC])
+//            ->asArray()
+//            ->all();
+//
+//        $model->date_biomaterial = date('Y-m-d', time());
+//
+//        return $this->render('create', [
+//                    'model' => $model,
+//                    'analyses_packages' => $analyses_packages
+//        ]);
     }
 
     /**
@@ -187,10 +210,10 @@ class AnalysesOrdersController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        if ($model->doctor_id != Module::$doctor->id) {
-            Yii::$app->session->setFlash('warning', Yii::t('lang', 'You can update only your orders.'));
-            return $this->redirect(['index']);
-        }
+//        if ($model->doctor_id != Module::$doctor->id) {
+//            Yii::$app->session->setFlash('warning', Yii::t('lang', 'You can update only your orders.'));
+//            return $this->redirect(['index']);
+//        }
 
         if ($model->status == $model::STATUS_DONE) {
             Yii::$app->session->setFlash('warning', Yii::t('lang', 'With the status - done, editing is not possible.'));
@@ -232,8 +255,12 @@ class AnalysesOrdersController extends Controller {
         # Якщо $model->analyses_packages_nums буде редаговано - очистимо $analyses_values
         $old_analyses_packages_nums = $model->analyses_packages_nums;
         $old_status = $model->status;
+        $old_patient_id = $model->patient_id;
 
         if ($model->load(Yii::$app->request->post())) {
+
+            # Захист від підробки пацієнта
+            $model->patient_id = $old_patient_id;
 
             # Якщо $model->analyses_values не пустий - оновити status на STATUS_EDITED
             if (!empty($model->analyses_values)) {
@@ -245,15 +272,28 @@ class AnalysesOrdersController extends Controller {
                 }
             }
 
-            # Якщо $model->analyses_packages_nums буде редаговано зі статусом EDITED - не зберігаємо модель і виводимо повідомлення
-            if ($old_status == $model::STATUS_EDITED && $model->analyses_packages_nums != $old_analyses_packages_nums) {
-                Yii::$app->session->setFlash('warning', Yii::t('lang', 'With the status - edited, it is impossible to change packages.'));
-                return $this->refresh();
-            }
+//            # Якщо $model->analyses_packages_nums буде редаговано зі статусом EDITED - не зберігаємо модель і виводимо повідомлення
+//            if ($old_status == $model::STATUS_EDITED && $model->analyses_packages_nums != $old_analyses_packages_nums) {
+//                Yii::$app->session->setFlash('warning', Yii::t('lang', 'With the status - edited, it is impossible to change packages.'));
+//                return $this->refresh();
+//            }
 
-            # Якщо $model->analyses_packages_nums буде редаговано (тільки зі статусом NEW) - очистимо $analyses_values
-            if ($old_status == $model::STATUS_NEW && $model->analyses_packages_nums != $old_analyses_packages_nums) {
-                $model->analyses_values = '';
+//            # Якщо $model->analyses_packages_nums буде редаговано (тільки зі статусом NEW) - очистимо $analyses_values
+//            if ($old_status == $model::STATUS_NEW && $model->analyses_packages_nums != $old_analyses_packages_nums) {
+//                $model->analyses_values = '';
+//            }
+
+            # Захист від зміни analyses_packages_nums, тільки для лаборантів
+            $model->analyses_packages_nums = $old_analyses_packages_nums;
+
+            # Додаємо id лаборанта
+            if (empty($model->laborants_ids)) {
+                $model->laborants_ids = (string)Module::$laborant->id;
+            } else {
+                $arr_laborants_ids = array_map(function ($el){ return intval($el); }, explode(',', $model->laborants_ids));
+                if (array_search((int)Module::$laborant->id, $arr_laborants_ids, true) === false) {
+                    $model->laborants_ids = implode(',', $arr_laborants_ids) . ',' . Module::$laborant->id;
+                }
             }
 
             if ($model->save()) {
@@ -292,20 +332,23 @@ class AnalysesOrdersController extends Controller {
 
     public function actionDelete($id) {
 
-        $model = $this->findModel($id);
-
-        if ($model->doctor_id != Module::$doctor->id) {
-            Yii::$app->session->setFlash('error', Yii::t('lang', 'You can delete only your orders.'));
-            return $this->redirect(['index']);
-        }
-
-        if ($model->status == $model::STATUS_EDITED || $model->status == $model::STATUS_DONE) {
-            Yii::$app->session->setFlash('error', Yii::t('lang', 'With the status - edited or done, deletion is impossible.'));
-            return $this->redirect(['index']);
-        }
-
-        $model->delete();
+        Yii::$app->session->setFlash('error', Yii::t('lang', 'You are not allowed to delete orders.'));
         return $this->redirect(['index']);
+
+//        $model = $this->findModel($id);
+//
+//        if ($model->doctor_id != Module::$doctor->id) {
+//            Yii::$app->session->setFlash('error', Yii::t('lang', 'You can delete only your orders.'));
+//            return $this->redirect(['index']);
+//        }
+//
+//        if ($model->status == $model::STATUS_EDITED || $model->status == $model::STATUS_DONE) {
+//            Yii::$app->session->setFlash('error', Yii::t('lang', 'With the status - edited or done, deletion is impossible.'));
+//            return $this->redirect(['index']);
+//        }
+//
+//        $model->delete();
+//        return $this->redirect(['index']);
     }
 
     /**

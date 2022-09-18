@@ -86,7 +86,9 @@ class AnalysesOrders extends ActiveRecord {
         if (parent::beforeSave($insert)) {
 
             #Виконувальний код
-            $this->date_biomaterial = strtotime($this->date_biomaterial);
+            if (!is_int($this->date_biomaterial)) {
+                $this->date_biomaterial = strtotime($this->date_biomaterial);
+            }
             #End Виконувальний код
 
             return true;
@@ -111,6 +113,21 @@ class AnalysesOrders extends ActiveRecord {
             'created_at' => Yii::t('lang', 'Created'),
             'updated_at' => Yii::t('lang', 'Updated'),
         ];
+    }
+
+    public function laborants() {
+        if (!empty($this->laborants_ids)) {
+            $arr_laborants_ids = array_map(function ($el){ return intval($el); }, explode(',', $this->laborants_ids));
+            $laborants = Doctor::find()
+                ->joinWith('i18n', false)
+                ->select([Doctor::tableName() . '.id', DoctorI18n::tableName() . '.name'])
+                ->where([Doctor::tableName() . '.status' => Doctor::STATUS_ACTIVE])
+                ->andWhere(['IN', Doctor::tableName() . '.id', $arr_laborants_ids])
+                ->asArray()
+                ->all();
+            return $laborants ? $laborants : null;
+        }
+        return null;
     }
 
     public function analysOrderEmail($analyses) {

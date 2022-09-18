@@ -3,10 +3,6 @@ use yii\helpers\Html;
 
 ?>
 
-<script>
-
-</script>
-
 <div class="analys-order-view">
 
     <p>

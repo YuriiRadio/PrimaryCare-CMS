@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Html;
+//use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 
@@ -35,7 +35,7 @@ table td, table th {
         </tr>
         <tr>
             <td><b>Одержувач:</b></td>
-            <td colspan="2"><b>КНП&nbsp;&quot;Березнівський ЦПМД&quot;</b> (34600, м. Березне, вул. Набережна, 3)</td>
+            <td colspan="2"><b>КНП&nbsp;&quot;Березнівський ЦПМД&quot;</b> (34600, Рівненська обл., м.Березне, вул.Набережна, 3)</td>
         </tr>
         <tr>
             <td><b>ЄДРПОУ одержувача:</b></td>
@@ -59,7 +59,7 @@ table td, table th {
         </tr>
         <tr>
             <td><b>Сума:</b></td>
-            <td colspan="2"><b><?= $sum . ' грн.' ?></b></td>
+            <td colspan="2"><b><?php echo number_format($sum, 2, ',', '') . ' грн.'; ?></b></td>
         </tr>
     </table>
     <p>&nbsp;</p>
@@ -75,12 +75,12 @@ table td, table th {
                 <td><?= $i ?></td>
                 <td><b><?= $analys_package['pac_num'] ?></b></td>
                 <td><?= $analys_package['title'] . '&nbsp;' . '(' . count(explode(',', $analys_package['analyses_ids'])) . ')' ?></td>
-                <td><?= $analys_package['cost'] ?></td>
+                <td <?= ($model->patient->our_patient && $analys_package['is_free']) ? 'style="text-decoration: line-through"' : '' ?>><?= number_format($analys_package['cost'], 2, ',', '') ?></td>
             </tr>
         <?php $i++; endforeach; ?>
             <tr>
                 <td colspan="3" style="text-align: right"><b><?= Yii::t('lang', 'Total') ?>:</b></td>
-                <td><?= $sum . ' грн.' ?></td>
+                <td><?php echo number_format($sum, 2, ',', '') . ' грн.'; ?></td>
             </tr>
     </table>
 </div>
